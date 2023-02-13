@@ -8,8 +8,6 @@ mongoose
     console.log("Connected to db !!!");
   });
 
-
-  
 //status Schema
 const statusSchema = new mongoose.Schema({
   userId: {
@@ -23,6 +21,10 @@ const statusSchema = new mongoose.Schema({
   isEdited: {
     type: Boolean,
     default: false,
+  },
+  uploadTime: {
+    type: String,
+    default: Date.now(),
   },
 });
 

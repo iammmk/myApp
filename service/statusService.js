@@ -52,6 +52,7 @@ async function updateStatusById(req, res) {
         status[key] = sentStatus[key];
       }
       status.isEdited = true;
+      status.uploadTime= Date.now()
       let updatedStatus = await status.save();
       res.status(200).json({
         message: "Task updated successfully..",
