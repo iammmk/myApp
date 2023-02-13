@@ -1,4 +1,5 @@
 const statusModel = require("../models/statusModel");
+const userModel = require("../models/userModel");
 
 // CRUD
 async function createStatus(req, res) {
@@ -8,7 +9,10 @@ async function createStatus(req, res) {
       userId: req.id,
       status: status,
     };
+    let user = await userModel.findById(req.id);
     let addedStatus = await statusModel.create(newStatus);
+    user.totalStatus = user.totalStatus + 1;
+    await user.save();
     res.status(200).json({
       message: "Added new status !!",
       data: addedStatus,
@@ -74,6 +78,9 @@ async function deleteStatusById(req, res) {
     let status = await statusModel.findById(statusId);
     if (status && status.userId === req.id) {
       let deletedStatus = await status.deleteOne();
+      let user = await userModel.findById(req.id);
+      user.totalStatus = user.totalStatus - 1;
+      await user.save();
       res.status(200).json({
         message: "status deleted successfully",
         data: deletedStatus,

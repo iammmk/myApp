@@ -38,6 +38,10 @@ let userSchema = new mongoose.Schema({
       message: "Password didn't matched !!",
     },
   },
+  totalStatus: {
+    type: Number,
+    default: 0,
+  },
 });
 
 userSchema.pre("save", function () {
