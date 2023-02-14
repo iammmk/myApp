@@ -11,13 +11,15 @@ const userRouter = require("./routers/userRouter");
 const statusRouter = require("./routers/statusRouter");
 const authRouter = require("./routers/authRouter");
 const likeRouter = require("./routers/likeRouter");
-// const { isLoggedIn } = require("./service/authService");
+const commentRouter = require("./routers/commentRouter");
+
 
 
 app.use("", authRouter)
 app.use("/user", userRouter);
 app.use("/status", statusRouter);
 app.use("/like", likeRouter)
+app.use("/comment", commentRouter)
 
 
 let port = 3000;

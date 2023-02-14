@@ -1,5 +1,6 @@
 const statusModel = require("../models/statusModel");
 const likeModel = require("../models/likeModel");
+const userModel = require("../models/userModel");
 
 async function addLike(req, res) {
   try {
@@ -34,6 +35,31 @@ async function addLike(req, res) {
   } catch (error) {
     res.status(501).json({
       message: "Failed to like the status",
+      error,
+    });
+  }
+}
+
+// fetch list of users liked the status
+async function getLikesByStatusId(req, res) {
+  try {
+    let id = req.body.statusId;
+    //check if statusId provided exists
+    let status = await statusModel.findById(id);
+    if (status) {
+      let userList = await likeModel.find({ statusId: id });
+      res.status(200).json({
+        message: "Fetched list of users who liked the status",
+        data: userList,
+      });
+    } else {
+      res.status(501).json({
+        message: "Pass correct status id",
+      });
+    }
+  } catch (error) {
+    res.status(501).json({
+      message: "Failed to fetch users who liked the status",
       error,
     });
   }
@@ -81,11 +107,19 @@ async function removeLike(req, res) {
 async function statusLikedByUserId(req, res) {
   try {
     let uid = req.params.id;
-    let likedStatus = await likeModel.find({ userId: uid });
-    res.status(200).json({
-      mesaage: "Liked status fetched successfully",
-      data: likedStatus,
-    });
+    //check if the userId provided exists
+    let user = await userModel.findById(uid);
+    if (user) {
+      let likedStatus = await likeModel.find({ userId: uid });
+      res.status(200).json({
+        mesaage: "Liked status fetched successfully",
+        data: likedStatus,
+      });
+    } else {
+      res.status(501).json({
+        message: "Pass correct userId",
+      });
+    }
   } catch (error) {
     res.status(501).json({
       message: "Failed to load liked status",
@@ -95,5 +129,6 @@ async function statusLikedByUserId(req, res) {
 }
 
 module.exports.addLike = addLike;
+module.exports.getLikesByStatusId = getLikesByStatusId;
 module.exports.removeLike = removeLike;
 module.exports.statusLikedByUserId = statusLikedByUserId;

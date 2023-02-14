@@ -5,11 +5,16 @@ const {
   addLike,
   removeLike,
   statusLikedByUserId,
+  getLikesByStatusId,
 } = require("../service/likeService");
 
 const { protectRoute } = require("../service/authService");
 
 likeRouter.use(protectRoute);
+
+likeRouter
+  .route("")
+  .get(getLikesByStatusId) 
 
 likeRouter
   .route("/:id")
