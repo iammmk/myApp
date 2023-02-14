@@ -8,29 +8,21 @@ mongoose
     console.log("Connected to db !!!");
   });
 
-//status Schema
-const statusSchema = new mongoose.Schema({
+//like Schema
+const likeSchema = new mongoose.Schema({
+  statusId: {
+    type: String,
+    required: true,
+  },
   userId: {
     type: String,
     required: true,
   },
-  status: {
-    type: String,
-    required: true,
-  },
-  totalLikes: {
-    type: Number,
-    default: 0,
-  },
-  isEdited: {
-    type: Boolean,
-    default: false,
-  },
-  uploadTime: {
-    type: String,
-    default: Date.now(),
-  },
+//   likeTime: {
+//     type: String,
+//     default: Date.now(),
+//   },
 });
 
-const statusModel = mongoose.model("statuscollection", statusSchema);
-module.exports = statusModel;
+const likeModel = mongoose.model("likescollection", likeSchema);
+module.exports = likeModel;

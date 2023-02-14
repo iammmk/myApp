@@ -44,6 +44,8 @@ let userSchema = new mongoose.Schema({
   },
 });
 
+// to added: username(like instagram)
+
 userSchema.pre("save", function () {
   this.confirmPassword = undefined;
 });

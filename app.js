@@ -10,12 +10,14 @@ app.use(cookieParser());
 const userRouter = require("./routers/userRouter");
 const statusRouter = require("./routers/statusRouter");
 const authRouter = require("./routers/authRouter");
+const likeRouter = require("./routers/likeRouter");
 // const { isLoggedIn } = require("./service/authService");
 
 
 app.use("", authRouter)
 app.use("/user", userRouter);
 app.use("/status", statusRouter);
+app.use("/like", likeRouter)
 
 
 let port = 3000;

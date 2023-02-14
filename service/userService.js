@@ -1,6 +1,5 @@
 const userModel = require("../models/userModel");
-const statusModel= require("../models/statusModel")
-
+const statusModel = require("../models/statusModel");
 
 // async function createUser(req, res) {
 //   try {
