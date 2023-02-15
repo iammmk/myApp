@@ -43,7 +43,7 @@ async function addLike(req, res) {
 // fetch list of users liked the status
 async function getLikesByStatusId(req, res) {
   try {
-    let id = req.body.statusId;
+    let id = req.params.id;
     //check if statusId provided exists
     let status = await statusModel.findById(id);
     if (status) {

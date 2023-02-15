@@ -1,22 +1,6 @@
 const userModel = require("../models/userModel");
 const statusModel = require("../models/statusModel");
 
-// async function createUser(req, res) {
-//   try {
-//     let userData = req.body;
-//     let user = await userModel.create(userData);
-//     res.status(200).json({
-//       message: "New user created",
-//       data: user,
-//     });
-//   } catch (error) {
-//     res.status(501).json({
-//       message: "Failed to get users",
-//       error,
-//     });
-//   }
-// }
-
 async function getAllUsers(req, res) {
   try {
     let users = await userModel.find({});
@@ -55,22 +39,22 @@ async function getUserProfile(req, res) {
   }
 }
 
-//Get user's status
-async function getUserStatus(req, res) {
-  try {
-    let userId = req.id;
-    let status = await statusModel.find({ userId: userId });
-    res.status(200).json({
-      message: "Got user's status !!",
-      data: status,
-    });
-  } catch (error) {
-    res.status(501).json({
-      message: "Failed to get user's status",
-      error,
-    });
-  }
-}
+//Get user's status------------------------ //check getStatusByUserId
+// async function getUserStatus(req, res) {
+//   try {
+//     let userId = req.id;
+//     let status = await statusModel.find({ userId: userId });
+//     res.status(200).json({
+//       message: "Got user's status !!",
+//       data: status,
+//     });
+//   } catch (error) {
+//     res.status(501).json({
+//       message: "Failed to get user's status",
+//       error,
+//     });
+//   }
+// }
 
 // Update profile
 async function updateUserProfile(req, res) {
@@ -124,10 +108,9 @@ async function deleteUserProfile(req, res) {
   }
 }
 
-// module.exports.createUser = createUser;
 module.exports.getAllUsers = getAllUsers;
 module.exports.getUserProfile = getUserProfile;
-module.exports.getUserStatus = getUserStatus;
+// module.exports.getUserStatus = getUserStatus;
 module.exports.updateUserProfile = updateUserProfile;
 module.exports.deleteUserProfile = deleteUserProfile;
 // module.exports.updateProfilePhoto = updateProfilePhoto;

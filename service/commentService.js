@@ -120,23 +120,6 @@ async function removeComment(req, res) {
   }
 }
 
-// // fetch status liked by a user
-// async function statusLikedByUserId(req, res) {
-//   try {
-//     let uid = req.params.id;
-//     let likedStatus = await likeModel.find({ userId: uid });
-//     res.status(200).json({
-//       mesaage: "Liked status fetched successfully",
-//       data: likedStatus,
-//     });
-//   } catch (error) {
-//     res.status(501).json({
-//       message: "Failed to load liked status",
-//       error,
-//     });
-//   }
-// }
-
 module.exports.addComment = addComment;
 module.exports.getComments = getComments;
 module.exports.updateComment = updateComment;

@@ -13,8 +13,8 @@ const { protectRoute } = require("../service/authService");
 likeRouter.use(protectRoute);
 
 likeRouter
-  .route("")
-  .get(getLikesByStatusId) 
+  .route("/status/:id")
+  .get(getLikesByStatusId) //statusId
 
 likeRouter
   .route("/:id")

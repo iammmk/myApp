@@ -6,6 +6,7 @@ const {
   getAllStatus,
   deleteStatusById,
   updateStatusById,
+  getStatusByUserId
 } = require("../service/statusService");
 
 const { protectRoute } = require("../service/authService");
@@ -19,7 +20,8 @@ statusRouter
 
 statusRouter
   .route("/:id")
-  .put(updateStatusById)
-  .delete(deleteStatusById);
+  .get(getStatusByUserId) //userId
+  .put(updateStatusById) //statusId
+  .delete(deleteStatusById); //statusId
 
 module.exports = statusRouter;

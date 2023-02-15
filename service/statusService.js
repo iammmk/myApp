@@ -52,7 +52,7 @@ async function updateStatusById(req, res) {
         status[key] = sentStatus[key];
       }
       status.isEdited = true;
-      status.uploadTime= Date.now()
+      status.uploadTime = Date.now();
       let updatedStatus = await status.save();
       res.status(200).json({
         message: "Task updated successfully..",
@@ -99,7 +99,32 @@ async function deleteStatusById(req, res) {
   }
 }
 
+//get status by userId
+async function getStatusByUserId(req, res) {
+  try {
+    let id = req.params.id;
+    let user = await userModel.findById(id);
+    if (user) {
+      let status = await statusModel.find({ userId: id });
+      res.status(200).json({
+        message: "Fetched status of the user",
+        data: status,
+      });
+    } else {
+      res.status(501).json({
+        message: "Enter correct user id",
+      });
+    }
+  } catch (error) {
+    res.status(501).json({
+      message: "Failed to delete the status..",
+      error,
+    });
+  }
+}
+
 module.exports.createStatus = createStatus;
 module.exports.getAllStatus = getAllStatus;
 module.exports.deleteStatusById = deleteStatusById;
 module.exports.updateStatusById = updateStatusById;
+module.exports.getStatusByUserId = getStatusByUserId;
