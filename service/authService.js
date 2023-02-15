@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const SECRET_KEY = "HiMmKhAn1999";
 
 async function signup(req, res) {
@@ -25,31 +26,27 @@ async function signup(req, res) {
 
 async function login(req, res) {
   try {
-    let { email, password } = req.body;
-    let user = await userModel.find({ email: email });
-    if (user.length) {
-      let loginUser = user[0];
-      if (loginUser.password === password) {
-        let token = jwt.sign({ id: loginUser["_id"] }, SECRET_KEY);
-        res.cookie("jwt", token, { httpOnly: true });
-        res.status(200).json({
-          message: "Login successful !",
-          data: loginUser,
-        });
-      } else {
-        res.status(501).json({
-          message: "Incorrect email or password.",
-        });
-      }
+    const { email, password } = req.body;
+
+    // check1: if user exists with the email
+    // check2: compare the password with the hash from the db
+    const user = await userModel.findOne({ email: email });
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const token = jwt.sign({ id: user._id }, SECRET_KEY);
+      res.cookie("jwt", token, { httpOnly: true });
+      res.status(200).json({
+        message: "Login successful!",
+        data: user,
+      });
     } else {
-      res.status(501).json({
-        message: "Incorrect email or password.",
+      res.status(401).json({
+        message: "Incorrect email/password",
       });
     }
   } catch (error) {
-    res.status(501).json({
+    console.error(error);
+    res.status(500).json({
       message: "Failed to login user.",
-      error,
     });
   }
 }
@@ -67,28 +64,6 @@ async function logout(req, res) {
     });
   }
 }
-
-// middlewares
-// async function isLoggedIn(req, res, next) {
-//   try {
-//     let token = req.cookies.jwt;
-//     let payload = jwt.verify(token, SECRET_KEY);
-//     if (payload) {
-//       // let id = payload.id;
-//       // let user = await userModel.findById(id);
-//       next();
-//     } else {
-//       res.status(501).json({
-//         message: "login first.",
-//       });
-//     }
-//   } catch (error) {
-//     res.status(501).json({
-//       message: "login first.",
-//       error,
-//     });
-//   }
-// }
 
 async function protectRoute(req, res, next) {
   try {
