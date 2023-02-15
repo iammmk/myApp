@@ -4,7 +4,7 @@ const likeRouter = express.Router();
 const {
   addLike,
   removeLike,
-  statusLikedByUserId,
+  // statusLikedByUserId,
   getLikesByStatusId,
 } = require("../service/likeService");
 
@@ -18,8 +18,8 @@ likeRouter
 
 likeRouter
   .route("/:id")
-  .get(statusLikedByUserId) //userId
-  .post(addLike) //statusId
-  .delete(removeLike); //statusId
+  // .get(statusLikedByUserId) //userId
+  .post(addLike) //statusId or commentId
+  .delete(removeLike); //statusId or commentId
 
 module.exports = likeRouter;

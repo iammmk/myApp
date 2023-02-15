@@ -22,15 +22,23 @@ const commentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  
+  totalLikes: {
+    type: Number,
+    default: 0,
+  },
+  totalComments: {
+    type: Number,
+    default: 0,
+  },
   commentTime: {
-    type: Number, // check type 
+    type: Number, // check type
     default: Date.now(),
   },
   isEdited: {
     type: Boolean,
     default: false,
   },
+  lastEdit: String,
 });
 
 const commentModel = mongoose.model("commentscollection", commentSchema);

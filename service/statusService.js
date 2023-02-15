@@ -1,3 +1,4 @@
+const commentModel = require("../models/commentModel");
 const statusModel = require("../models/statusModel");
 const userModel = require("../models/userModel");
 
@@ -47,11 +48,13 @@ async function updateStatusById(req, res) {
     // check if the user has that status with given id
     let status = await statusModel.findById(statusId);
     if (status && status.userId === req.id) {
+      let lastStatus = status.status;
       let sentStatus = req.body;
       for (let key in sentStatus) {
         status[key] = sentStatus[key];
       }
       status.isEdited = true;
+      status.lastEdit = lastStatus;
       status.uploadTime = Date.now();
       let updatedStatus = await status.save();
       res.status(200).json({
@@ -78,10 +81,18 @@ async function deleteStatusById(req, res) {
     // check if the user has that status with given id
     let status = await statusModel.findById(statusId);
     if (status && status.userId === req.id) {
-      let deletedStatus = await status.deleteOne();
+      let deletedStatus = await statusModel.findByIdAndDelete(statusId);
+
+      let deletedComments = await commentModel.find({ statusId: statusId });
+      for (let comment in deletedComments) {
+      }
+
+      // add tree structure
+
       let user = await userModel.findById(req.id);
       user.totalStatus = user.totalStatus - 1;
       await user.save();
+
       res.status(200).json({
         message: "status deleted successfully",
         data: deletedStatus,

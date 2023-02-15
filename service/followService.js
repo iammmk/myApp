@@ -100,7 +100,7 @@ async function unfollowUserByUserId(req, res) {
 }
 
 // get following list of the user
-async function getFollowingsByUserId(req, res) {
+async function getFollowingByUserId(req, res) {
   try {
     let id = req.params.id;
     let user = await userModel.findById(id);
@@ -154,4 +154,4 @@ async function getFollowersByUserId(req, res) {
 module.exports.followUserByUserId = followUserByUserId;
 module.exports.unfollowUserByUserId = unfollowUserByUserId;
 module.exports.getFollowersByUserId = getFollowersByUserId;
-module.exports.getFollowingsByUserId = getFollowingsByUserId;
+module.exports.getFollowingByUserId = getFollowingByUserId;

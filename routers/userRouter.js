@@ -2,7 +2,6 @@ const express = require("express");
 const userRouter = express.Router();
 
 const {
-  // createUser,
   getAllUsers,
   getUserProfile,
   updateUserProfile,
@@ -12,8 +11,10 @@ const {
 
 const {
   getFollowersByUserId,
-  getFollowingsByUserId,
+  getFollowingByUserId,
 } = require("../service/followService");
+
+const { statusLikedByUserId } = require("../service/likeService");
 
 const { logout, protectRoute } = require("../service/authService");
 
@@ -22,7 +23,8 @@ userRouter.use(protectRoute);
 userRouter.route("").get(getAllUsers);
 
 userRouter.route("/:id/followers").get(getFollowersByUserId);
-userRouter.route("/:id/followings").get(getFollowingsByUserId);
+userRouter.route("/:id/followings").get(getFollowingByUserId);
+userRouter.route("/:id/like").get(statusLikedByUserId);
 
 userRouter
   .route("/userProfile")

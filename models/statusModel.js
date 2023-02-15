@@ -30,8 +30,9 @@ const statusSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  lastEdit: String,
   uploadTime: {
-    type: Number, // check type 
+    type: Number, // check type
     default: Date.now(),
   },
 });
