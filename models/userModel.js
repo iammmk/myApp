@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const DB_LINK =
-  "mongodb+srv://iammmk:iamMMK991104@cluster0.mhv3qwj.mongodb.net/?retryWrites=true&w=majority";
+const DB_LINK = process.env.DB_LINK;
 mongoose.set("strictQuery", false);
 mongoose
   .connect(DB_LINK, { useNewUrlParser: true, useUnifiedTopology: true })

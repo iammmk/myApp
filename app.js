@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
+require("dotenv").config() //to use .env file data
 
 app.use(express.json());
 app.use(cookieParser());
