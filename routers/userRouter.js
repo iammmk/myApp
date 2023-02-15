@@ -17,6 +17,7 @@ const {
 const { statusLikedByUserId } = require("../service/likeService");
 
 const { logout, protectRoute } = require("../service/authService");
+const { getStatusByFollowing } = require("../service/statusService");
 
 userRouter.use(protectRoute);
 
@@ -31,6 +32,10 @@ userRouter
   .get(getUserProfile)
   .put(updateUserProfile)
   .delete(deleteUserProfile);
+
+  userRouter
+  .route("/userProfile/status")
+  .get(getStatusByFollowing)
 
 // userRouter.route("/userProfile/status").get(getUserStatus);
 

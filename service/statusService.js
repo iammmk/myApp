@@ -1,4 +1,5 @@
 const commentModel = require("../models/commentModel");
+const followModel = require("../models/followModel");
 const statusModel = require("../models/statusModel");
 const userModel = require("../models/userModel");
 
@@ -128,7 +129,34 @@ async function getStatusByUserId(req, res) {
     }
   } catch (error) {
     res.status(501).json({
-      message: "Failed to delete the status..",
+      message: "Failed to fetch the status..",
+      error,
+    });
+  }
+}
+
+// get status of the users you follow
+async function getStatusByFollowing(req, res) {
+  try {
+    let uid = req.id;
+    let followingList = await followModel.find({ fromId: uid });
+    let status = [];
+
+    for (let following of followingList) {
+      let user = following.toId;
+      let userStatus = await statusModel.find({ userId: user });
+
+      for (let item of userStatus) {
+        status.push(item);
+      }
+    }
+    res.status(200).json({
+      message: "Fetched status from your following",
+      data: status,
+    });
+  } catch (error) {
+    res.status(501).json({
+      message: "Failed to fetch status of your following list",
       error,
     });
   }
@@ -139,3 +167,4 @@ module.exports.getAllStatus = getAllStatus;
 module.exports.deleteStatusById = deleteStatusById;
 module.exports.updateStatusById = updateStatusById;
 module.exports.getStatusByUserId = getStatusByUserId;
+module.exports.getStatusByFollowing = getStatusByFollowing;

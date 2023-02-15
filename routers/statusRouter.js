@@ -9,7 +9,10 @@ const {
   getStatusByUserId,
 } = require("../service/statusService");
 
-const { getCommentByStatusId, addCommentByStatusId } = require("../service/commentService");
+const {
+  getCommentByStatusId,
+  addCommentByStatusId,
+} = require("../service/commentService");
 
 const { protectRoute } = require("../service/authService");
 
