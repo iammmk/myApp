@@ -16,6 +16,12 @@ const statusSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
+    validate: {
+      validator: function () {
+        return this.status.length <= 140;
+      },
+      message: "Max character limit is 140",
+    },
   },
   totalLikes: {
     type: Number,

@@ -2,34 +2,44 @@ const mongoose = require("mongoose");
 const DB_LINK = process.env.DB_LINK;
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(DB_LINK, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(DB_LINK, { useNewUrlParser: true, useUnifiedTopology: true,autoIndex: true })
   .then((db) => {
     console.log("Connected to db !!!");
   });
 
 const bcrypt = require("bcryptjs");
-const { isEmailValid } = require("../service/util");
+const { isEmailValid, isUsernameValid } = require("../service/util");
 
 // User schema
 let userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    validate: {
+      validator: function () {
+        return this.name.length <= 50;
+      },
+      message: "Max character limit of name is 50",
+    },
+  },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    index: true,
+    validate: [isUsernameValid, "Invalid username"],
   },
   email: {
     type: String,
     required: true,
     unique: true,
+    index: true,
     validate: [isEmailValid, "Invalid email address"],
   },
   bio: String,
   joinedOn: {
     type: Date,
     default: Date.now(),
-    //restrict updation from frontend
-    // set(value) {
-    //   return this.joinedOn || Date.now()
-    // },
   },
   dob: Date, //handle format from frontend
   password: {
@@ -59,6 +69,11 @@ let userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  // to be done-----> profile pic of user
+  // pImage: {
+  //   type: String,
+  //   default: "/images/users/default.png",
+  // },
 });
 
 // to added: username(like instagram)

@@ -5,6 +5,13 @@ function isEmailValid(email) {
   return emailRegex.test(email);
 }
 
+function isUsernameValid(username) {
+  //twitter username--> max ch =15, use only=alphanumeric ch and underscore
+  var usernameRegex = /^[a-zA-Z0-9_]{1,15}$/i;
+  return usernameRegex.test(username);
+}
+
 module.exports = {
   isEmailValid,
+  isUsernameValid,
 };

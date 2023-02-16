@@ -107,10 +107,16 @@ async function getFollowingByUserId(req, res) {
 
     // check if the userId passed is correct
     if (user) {
+      let result = [];
       let followingList = await followModel.find({ fromId: id });
+      for (let item of followingList) {
+        let uid = item.toId;
+        let people = await userModel.findById(uid);
+        result.push(people);
+      }
       res.status(200).json({
         message: "Following list fetched",
-        data: followingList,
+        data: result,
       });
     } else {
       res.status(501).json({
@@ -133,10 +139,16 @@ async function getFollowersByUserId(req, res) {
 
     // check if the userId passed is correct
     if (user) {
+      let result = [];
       let followersList = await followModel.find({ toId: id });
+      for (let item of followersList) {
+        let uid = item.fromId;
+        let people = await userModel.findById(uid);
+        result.push(people);
+      }
       res.status(200).json({
-        message: "Followers list fetched",
-        data: followersList,
+        message: "Following list fetched",
+        data: result,
       });
     } else {
       res.status(501).json({

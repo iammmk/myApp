@@ -8,6 +8,7 @@ async function signup(req, res) {
     let user = req.body;
     let newUser = await userModel.create({
       name: user.name,
+      username: user.username,
       email: user.email,
       password: user.password,
       confirmPassword: user.confirmPassword,
@@ -26,11 +27,13 @@ async function signup(req, res) {
 
 async function login(req, res) {
   try {
-    const { email, password } = req.body;
+    const { email, username, password } = req.body;
 
-    // check1: if user exists with the email
+    // check1: if user exists with the email or username
     // check2: compare the password with the hash from the db
-    const user = await userModel.findOne({ email: email });
+    const user =
+      (await userModel.findOne({ email: email })) ||
+      (await userModel.findOne({ username: username }));
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign({ id: user._id }, SECRET_KEY);
       res.cookie("jwt", token, { httpOnly: true });

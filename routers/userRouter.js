@@ -33,9 +33,7 @@ userRouter
   .put(updateUserProfile)
   .delete(deleteUserProfile);
 
-  userRouter
-  .route("/userProfile/status")
-  .get(getStatusByFollowing)
+userRouter.route("/userProfile/statusByFollowing").get(getStatusByFollowing);
 
 // userRouter.route("/userProfile/status").get(getUserStatus);
 
