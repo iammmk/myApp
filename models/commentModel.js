@@ -20,6 +20,12 @@ const commentSchema = new mongoose.Schema({
   comment: {
     type: String,
     required: true,
+    validate: {
+      validator: function () {
+        return this.comment.length <= 140;
+      },
+      message: "Max character limit is 140",
+    },
   },
   totalLikes: {
     type: Number,
