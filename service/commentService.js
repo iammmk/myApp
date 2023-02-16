@@ -64,6 +64,7 @@ async function addCommentByStatusId(req, res) {
       };
       let addedComment = await commentModel.create(newComment);
 
+      status.childCommentIds.push(addedComment._id);
       status.totalComments = status.totalComments + 1;
       await status.save();
 
@@ -99,6 +100,7 @@ async function addCommentByCommentId(req, res) {
       };
       let addedComment = await commentModel.create(newComment);
 
+      comment.childCommentIds.push(addedComment._id);
       comment.totalComments = comment.totalComments + 1;
       await comment.save();
 
@@ -126,13 +128,13 @@ async function updateComment(req, res) {
     let selectedComment = await commentModel.findById(id);
 
     if (selectedComment && selectedComment.userId === uid) {
-      let lastComment= selectedComment.comment
+      let lastComment = selectedComment.comment;
       for (let key in req.body) {
         selectedComment[key] = req.body[key];
       }
       selectedComment.commentTime = Date.now();
       selectedComment.isEdited = true;
-      selectedComment.lastEdit= lastComment
+      selectedComment.lastEdit = lastComment;
       let updatedComment = await selectedComment.save();
       res.status(200).json({
         message: "Comment updated !!",
@@ -153,28 +155,21 @@ async function updateComment(req, res) {
 
 async function removeComment(req, res) {
   try {
-    let id = req.params.id; //commentId
+    let commentId = req.params.id; //commentId
     let uid = req.id; //userId
 
-    // check if the comment is made by the user
-    let selectedComment = await commentModel.findById(id);
-    if (selectedComment && selectedComment.userId === uid) {
-      let deletedComment = await commentModel.findByIdAndDelete(id);
+    // check if comment id is correct and the comment is made by the user
+    let comment = await commentModel.findById(commentId);
+    if (comment && comment.userId === uid) {
+      await deleteComment(commentId);
 
-      //update comment counts of the parent-comment (either a status or comment)
-      let comment =
-        (await commentModel.findById(deletedComment.statusId)) ||
-        (await statusModel.findById(deletedComment.statusId));
-      comment.totalComments = comment.totalComments - 1;
-
-      await comment.save();
       res.status(200).json({
         message: "comment deleted",
-        data: deletedComment,
+        data: comment,
       });
     } else {
       res.status(501).json({
-        message: "Pass correct comment id",
+        message: "Failed to delete the comment",
       });
     }
   } catch (error) {
@@ -184,6 +179,28 @@ async function removeComment(req, res) {
     });
   }
 }
+
+
+// recursion method
+const deleteComment = async (commentId) => {
+  // Find the comment with the given ID
+  const comment = await commentModel.findById(commentId);
+
+  // Delete all child comments
+  for (const childId of comment.childCommentIds) {
+    await deleteComment(childId);
+  }
+
+  // Decrement the total comments count of the parent status/comment
+  const parentComment =
+    (await statusModel.findById(comment.statusId)) ||
+    (await commentModel.findById(comment.statusId));
+  parentComment.totalComments -= 1;
+  await parentComment.save();
+
+  // Delete the comment
+  await commentModel.findByIdAndDelete(commentId);
+};
 
 module.exports.addCommentByStatusId = addCommentByStatusId;
 module.exports.addCommentByCommentId = addCommentByCommentId;

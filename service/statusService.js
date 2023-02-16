@@ -76,27 +76,53 @@ async function updateStatusById(req, res) {
 }
 
 // shorten the code
+// async function deleteStatusById(req, res) {
+//   try {
+//     let statusId = req.params.id;
+//     // check if the user has that status with given id
+//     let status = await statusModel.findById(statusId);
+//     if (status && status.userId === req.id) {
+//       let deletedStatus = await statusModel.findByIdAndDelete(statusId);
+
+//       let deletedComments = await commentModel.find({ statusId: statusId });
+//       for (let comment in deletedComments) {
+//       }
+
+//       // add tree structure
+
+//       let user = await userModel.findById(req.id);
+//       user.totalStatus = user.totalStatus - 1;
+//       await user.save();
+
+//       res.status(200).json({
+//         message: "status deleted successfully",
+//         data: deletedStatus,
+//       });
+//     } else {
+//       res.status(501).json({
+//         message: "Failed to delete the status..",
+//       });
+//     }
+//   } catch (error) {
+//     res.status(501).json({
+//       message: "Failed to delete the status..",
+//       error,
+//     });
+//   }
+// }
+
 async function deleteStatusById(req, res) {
   try {
     let statusId = req.params.id;
-    // check if the user has that status with given id
+    let uid = req.body;
     let status = await statusModel.findById(statusId);
-    if (status && status.userId === req.id) {
-      let deletedStatus = await statusModel.findByIdAndDelete(statusId);
 
-      let deletedComments = await commentModel.find({ statusId: statusId });
-      for (let comment in deletedComments) {
-      }
-
-      // add tree structure
-
-      let user = await userModel.findById(req.id);
-      user.totalStatus = user.totalStatus - 1;
-      await user.save();
+    if (status && status.userId === uid) {
+      await deleteStatus(statusId);
 
       res.status(200).json({
         message: "status deleted successfully",
-        data: deletedStatus,
+        data: status,
       });
     } else {
       res.status(501).json({
@@ -161,6 +187,38 @@ async function getStatusByFollowing(req, res) {
     });
   }
 }
+
+// recursion
+const deleteComment = async (commentId) => {
+  // Find the comment with the given ID
+  const comment = await commentModel.findById(commentId);
+
+  // If the comment doesn't exist, return
+  if (!comment) {
+    return;
+  }
+
+  // Delete all child comments
+  for (const childId of comment.childCommentIds) {
+    await deleteComment(childId);
+  }
+
+  // Delete the comment
+  await commentModel.findByIdAndDelete(commentId);
+};
+
+const deleteStatus = async (statusId) => {
+  // Find the status with the given ID
+  const status = await statusModel.findById(statusId);
+
+  // Delete all comments of the status
+  for (const commentId of status.childCommentIds) {
+    await deleteComment(commentId);
+  }
+
+  // Delete the status
+  await statusModel.findByIdAndDelete(statusId);
+};
 
 module.exports.createStatus = createStatus;
 module.exports.getAllStatus = getAllStatus;
