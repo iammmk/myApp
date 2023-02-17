@@ -14,7 +14,7 @@ likeRouter.use(protectRoute);
 
 likeRouter
   .route("/status/:id")
-  .get(getLikesByStatusId) //statusId
+  .get(getLikesByStatusId) //statusId or commentId
 
 likeRouter
   .route("/:id")

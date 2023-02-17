@@ -9,7 +9,8 @@ mongoose
 
 //comment Schema
 const commentSchema = new mongoose.Schema({
-  statusId: { //parent id
+  statusId: {
+    //parent id
     type: String,
     required: true,
   },
@@ -26,6 +27,9 @@ const commentSchema = new mongoose.Schema({
       },
       message: "Max character limit is 140",
     },
+  },
+  mainStatusByUserId: {
+    type: String,
   },
   childCommentIds: {
     type: [String],

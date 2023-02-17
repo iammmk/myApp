@@ -52,26 +52,26 @@ async function addLike(req, res) {
   }
 }
 
-// fetch list of users liked the status
+// fetch list of users liked the status/comment
 async function getLikesByStatusId(req, res) {
   try {
     let id = req.params.id;
     //check if statusId provided exists
-    let status = await statusModel.findById(id);
+    let status = await statusModel.findById(id) || await commentModel.findById(id)
     if (status) {
       let userList = await likeModel.find({ statusId: id });
       res.status(200).json({
-        message: "Fetched list of users who liked the status",
+        message: "Fetched list of users who liked the status/comment",
         data: userList,
       });
     } else {
       res.status(501).json({
-        message: "Pass correct status id",
+        message: "Pass correct status/comment id",
       });
     }
   } catch (error) {
     res.status(501).json({
-      message: "Failed to fetch users who liked the status",
+      message: "Failed to fetch users who liked the status/comment",
       error,
     });
   }
@@ -125,7 +125,7 @@ async function removeLike(req, res) {
   }
 }
 
-// fetch status liked by a user
+// fetch status/comments liked by a user
 async function statusLikedByUserId(req, res) {
   try {
     let uid = req.params.id;
@@ -134,7 +134,7 @@ async function statusLikedByUserId(req, res) {
     if (user) {
       let likedStatus = await likeModel.find({ userId: uid });
       res.status(200).json({
-        mesaage: "Liked status by user fetched successfully",
+        mesaage: "Liked status/comment by user fetched successfully",
         data: likedStatus,
       });
     } else {
@@ -144,7 +144,7 @@ async function statusLikedByUserId(req, res) {
     }
   } catch (error) {
     res.status(501).json({
-      message: "Failed to load liked status",
+      message: "Failed to load liked status/comment",
       error,
     });
   }

@@ -1,5 +1,6 @@
 const commentModel = require("../models/commentModel");
 const followModel = require("../models/followModel");
+const likeModel = require("../models/likeModel");
 const statusModel = require("../models/statusModel");
 const userModel = require("../models/userModel");
 
@@ -78,7 +79,7 @@ async function updateStatusById(req, res) {
 async function deleteStatusById(req, res) {
   try {
     let statusId = req.params.id;
-    let uid = req.body;
+    let uid = req.id;
     let status = await statusModel.findById(statusId);
 
     if (status && status.userId === uid) {
@@ -169,6 +170,7 @@ const deleteComment = async (commentId) => {
 
   // Delete the comment
   await commentModel.findByIdAndDelete(commentId);
+  await likeModel.deleteMany({statusId: commentId})
 };
 
 const deleteStatus = async (statusId) => {
@@ -182,6 +184,7 @@ const deleteStatus = async (statusId) => {
 
   // Delete the status
   await statusModel.findByIdAndDelete(statusId);
+  await likeModel.deleteMany({statusId: statusId})
 };
 
 module.exports.createStatus = createStatus;

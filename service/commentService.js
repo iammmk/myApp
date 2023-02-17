@@ -1,13 +1,16 @@
 const statusModel = require("../models/statusModel");
 const commentModel = require("../models/commentModel");
+const likeModel = require("../models/likeModel");
 
 //get comments of a status
 async function getCommentByStatusId(req, res) {
   try {
     let id = req.params.id; //statusId
 
-    let comments = await commentModel.find({ statusId: id });
-    if (comments) {
+    let status = await statusModel.findById(id);
+    if (status) {
+      let comments = await commentModel.find({ statusId: id });
+
       res.status(200).json({
         message: "Fetched comments of the status",
         data: comments,
@@ -25,13 +28,37 @@ async function getCommentByStatusId(req, res) {
   }
 }
 
-//get comments of a comment
+//get a particular comment by commentId of the comment
 async function getCommentByCommentId(req, res) {
   try {
-    let id = req.params.id; //commentId
+    let id = req.params.id;
+    let comment = await commentModel.findById(id);
+    if (comment) {
+      res.status(200).json({
+        message: "Got the comment",
+        data: comment,
+      });
+    } else {
+      res.status(501).json({
+        message: "Pass correct comment Id",
+      });
+    }
+  } catch (error) {
+    res.status(501).json({
+      message: "Failed to fetch the comment",
+      error,
+    });
+  }
+}
 
-    let comments = await commentModel.find({ statusId: id });
-    if (comments) {
+//get child comments of a comment
+async function getChildCommentsByCommentId(req, res) {
+  try {
+    let id = req.params.id; //commentId
+    let comment = await commentModel.findById(id);
+    if (comment) {
+      let comments = await commentModel.find({ statusId: id });
+
       res.status(200).json({
         message: "Fetched comments of the comment",
         data: comments,
@@ -57,10 +84,12 @@ async function addCommentByStatusId(req, res) {
 
     let status = await statusModel.findById(id);
     if (status) {
+      let statusByUserId = status.userId;
       const newComment = {
         statusId: id,
         userId: uid,
         comment: req.body.comment,
+        mainStatusByUserId: statusByUserId,
       };
       let addedComment = await commentModel.create(newComment);
 
@@ -97,6 +126,7 @@ async function addCommentByCommentId(req, res) {
         statusId: id,
         userId: uid,
         comment: req.body.comment,
+        mainStatusByUserId: comment.mainStatusByUserId,
       };
       let addedComment = await commentModel.create(newComment);
 
@@ -160,7 +190,7 @@ async function removeComment(req, res) {
 
     // check if comment id is correct and the comment is made by the user
     let comment = await commentModel.findById(commentId);
-    if (comment && comment.userId === uid) {
+    if (comment?.userId === uid || comment?.mainStatusByUserId === uid) {
       await deleteComment(commentId);
 
       res.status(200).json({
@@ -180,7 +210,6 @@ async function removeComment(req, res) {
   }
 }
 
-
 // recursion method
 const deleteComment = async (commentId) => {
   // Find the comment with the given ID
@@ -196,15 +225,22 @@ const deleteComment = async (commentId) => {
     (await statusModel.findById(comment.statusId)) ||
     (await commentModel.findById(comment.statusId));
   parentComment.totalComments -= 1;
+
+  //drop commentId from parant's childCommentIds array
+  parentComment.childCommentIds = parentComment.childCommentIds.filter(
+    (element) => element !== commentId
+  );
   await parentComment.save();
 
   // Delete the comment
   await commentModel.findByIdAndDelete(commentId);
+  await likeModel.deleteMany({statusId: commentId})
 };
 
 module.exports.addCommentByStatusId = addCommentByStatusId;
 module.exports.addCommentByCommentId = addCommentByCommentId;
 module.exports.getCommentByStatusId = getCommentByStatusId;
 module.exports.getCommentByCommentId = getCommentByCommentId;
+module.exports.getChildCommentsByCommentId = getChildCommentsByCommentId;
 module.exports.updateComment = updateComment;
 module.exports.removeComment = removeComment;

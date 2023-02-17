@@ -53,13 +53,13 @@ let userSchema = new mongoose.Schema({
   },
   confirmPassword: {
     type: String,
-    minLength: [8, "Min 8 characters required."],
     validate: {
       validator: function () {
         return this.password == this.confirmPassword;
       },
       message: "Password didn't matched !!",
     },
+    // required: true, //restrict in frontend as we're using pre.save with conf pass
   },
   totalStatus: {
     type: Number,
