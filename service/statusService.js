@@ -75,42 +75,6 @@ async function updateStatusById(req, res) {
   }
 }
 
-// shorten the code
-// async function deleteStatusById(req, res) {
-//   try {
-//     let statusId = req.params.id;
-//     // check if the user has that status with given id
-//     let status = await statusModel.findById(statusId);
-//     if (status && status.userId === req.id) {
-//       let deletedStatus = await statusModel.findByIdAndDelete(statusId);
-
-//       let deletedComments = await commentModel.find({ statusId: statusId });
-//       for (let comment in deletedComments) {
-//       }
-
-//       // add tree structure
-
-//       let user = await userModel.findById(req.id);
-//       user.totalStatus = user.totalStatus - 1;
-//       await user.save();
-
-//       res.status(200).json({
-//         message: "status deleted successfully",
-//         data: deletedStatus,
-//       });
-//     } else {
-//       res.status(501).json({
-//         message: "Failed to delete the status..",
-//       });
-//     }
-//   } catch (error) {
-//     res.status(501).json({
-//       message: "Failed to delete the status..",
-//       error,
-//     });
-//   }
-// }
-
 async function deleteStatusById(req, res) {
   try {
     let statusId = req.params.id;
