@@ -4,7 +4,7 @@ mongoose.set("strictQuery", false);
 mongoose
   .connect(DB_LINK, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((db) => {
-    console.log("Connected to db !!!");
+    console.log("Connected to statusCollection !!!");
   });
 
 //status Schema
@@ -46,5 +46,5 @@ const statusSchema = new mongoose.Schema({
   },
 });
 
-const statusModel = mongoose.model("statuscollection", statusSchema);
+const statusModel = mongoose.model("statusCollection", statusSchema);
 module.exports = statusModel;

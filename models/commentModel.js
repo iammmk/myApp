@@ -4,7 +4,7 @@ mongoose.set("strictQuery", false);
 mongoose
   .connect(DB_LINK, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((db) => {
-    console.log("Connected to db !!!");
+    console.log("Connected to commentsCollection !!!");
   });
 
 //comment Schema
@@ -50,5 +50,5 @@ const commentSchema = new mongoose.Schema({
   lastEdit: String,
 });
 
-const commentModel = mongoose.model("commentscollection", commentSchema);
+const commentModel = mongoose.model("commentsCollection", commentSchema);
 module.exports = commentModel;

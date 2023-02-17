@@ -2,9 +2,13 @@ const mongoose = require("mongoose");
 const DB_LINK = process.env.DB_LINK;
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(DB_LINK, { useNewUrlParser: true, useUnifiedTopology: true,autoIndex: true })
+  .connect(DB_LINK, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    autoIndex: true,
+  })
   .then((db) => {
-    console.log("Connected to db !!!");
+    console.log("Connected to usersCollection !!!");
   });
 
 const bcrypt = require("bcryptjs");
@@ -76,8 +80,6 @@ let userSchema = new mongoose.Schema({
   // },
 });
 
-// to added: username(like instagram)
-
 // remove confirmPassword before save
 userSchema.pre("save", function () {
   this.confirmPassword = undefined;
@@ -100,5 +102,5 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-const userModel = mongoose.model("userscollection", userSchema);
+const userModel = mongoose.model("usersCollection", userSchema);
 module.exports = userModel;

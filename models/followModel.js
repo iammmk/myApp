@@ -4,17 +4,17 @@ mongoose.set("strictQuery", false);
 mongoose
   .connect(DB_LINK, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((db) => {
-    console.log("Connected to db !!!");
+    console.log("Connected to followsCollection !!!");
   });
 
 //follow Schema
 const followSchema = new mongoose.Schema({
-  // toId= whom user is following
+  // toId: whom user is following
   toId: {
     type: String,
     required: true,
   },
-  // fromId= user who is following
+  // fromId: user who is following
   fromId: {
     type: String,
     required: true,
@@ -25,5 +25,5 @@ const followSchema = new mongoose.Schema({
   //   },
 });
 
-const followModel = mongoose.model("followscollection", followSchema);
+const followModel = mongoose.model("followsCollection", followSchema);
 module.exports = followModel;

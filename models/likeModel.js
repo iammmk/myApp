@@ -4,7 +4,7 @@ mongoose.set("strictQuery", false);
 mongoose
   .connect(DB_LINK, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((db) => {
-    console.log("Connected to db !!!");
+    console.log("Connected to likesCollection !!!");
   });
 
 //like Schema
@@ -23,5 +23,5 @@ const likeSchema = new mongoose.Schema({
 //   },
 });
 
-const likeModel = mongoose.model("likescollection", likeSchema);
+const likeModel = mongoose.model("likesCollection", likeSchema);
 module.exports = likeModel;
