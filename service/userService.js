@@ -1,5 +1,4 @@
 const userModel = require("../models/userModel");
-const statusModel = require("../models/statusModel");
 
 async function getAllUsers(req, res) {
   try {
@@ -39,23 +38,6 @@ async function getUserProfile(req, res) {
   }
 }
 
-//Get user's status------------------------ //check getStatusByUserId
-// async function getUserStatus(req, res) {
-//   try {
-//     let userId = req.id;
-//     let status = await statusModel.find({ userId: userId });
-//     res.status(200).json({
-//       message: "Got user's status !!",
-//       data: status,
-//     });
-//   } catch (error) {
-//     res.status(501).json({
-//       message: "Failed to get user's status",
-//       error,
-//     });
-//   }
-// }
-
 // Update profile
 async function updateUserProfile(req, res) {
   try {
@@ -85,32 +67,32 @@ async function updateUserProfile(req, res) {
   }
 }
 
-// delete profile
-async function deleteUserProfile(req, res) {
-  try {
-    let id = req.id;
-    let user = await userModel.findByIdAndDelete(id);
-    if (user) {
-      res.status(200).json({
-        mesaage: "user deleted successfully",
-        data: user,
-      });
-    } else {
-      res.status(501).json({
-        mesaage: "wrong id passed",
-      });
-    }
-  } catch (error) {
-    res.status(501).json({
-      message: "Failed to delete user",
-      error,
-    });
-  }
-}
+// delete profile--> needs to include many edge cases
+// async function deleteUserProfile(req, res) {
+//   try {
+//     let id = req.id;
+//     let user = await userModel.findByIdAndDelete(id);
+//     await statusModel.deleteMany({ userId: id });
+//     await likeModel.deleteMany({ userId: id });
+//     //remove follower/following
+//     await followModel.deleteMany({ toId: id });
+//     await followModel.deleteMany({ fromId: id });
+//     await commentModel.deleteMany({ userId: id });
+//     await commentModel.deleteMany({ mainStatusByUserId: id });
+
+//     res.status(200).json({
+//       mesaage: "user deleted successfully",
+//       data: user,
+//     });
+//   } catch (error) {
+//     res.status(501).json({
+//       message: "Failed to delete user",
+//       error,
+//     });
+//   }
+// }
 
 module.exports.getAllUsers = getAllUsers;
 module.exports.getUserProfile = getUserProfile;
-// module.exports.getUserStatus = getUserStatus;
 module.exports.updateUserProfile = updateUserProfile;
-module.exports.deleteUserProfile = deleteUserProfile;
-// module.exports.updateProfilePhoto = updateProfilePhoto;
+// module.exports.deleteUserProfile = deleteUserProfile;

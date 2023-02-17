@@ -5,8 +5,7 @@ const {
   getAllUsers,
   getUserProfile,
   updateUserProfile,
-  deleteUserProfile,
-  // getUserStatus,
+  // deleteUserProfile,
 } = require("../service/userService");
 
 const {
@@ -27,15 +26,10 @@ userRouter.route("/:id/followers").get(getFollowersByUserId);
 userRouter.route("/:id/followings").get(getFollowingByUserId);
 userRouter.route("/:id/like").get(statusLikedByUserId);
 
-userRouter
-  .route("/userProfile")
-  .get(getUserProfile)
-  .put(updateUserProfile)
-  .delete(deleteUserProfile);
+userRouter.route("/userProfile").get(getUserProfile).put(updateUserProfile);
+// .delete(deleteUserProfile);
 
 userRouter.route("/userProfile/statusByFollowing").get(getStatusByFollowing);
-
-// userRouter.route("/userProfile/status").get(getUserStatus);
 
 userRouter.route("/logout").get(logout);
 

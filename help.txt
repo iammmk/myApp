@@ -2,3 +2,9 @@ if some abnormality occurs (eg user with same username/email getting registered)
 
 to stop mongodb server: net stop MongoDB
 to start mongodb server: net start MongoDB
+
+
+to be added:
+1. userprofile delete
+2. upload profile pic
+3. forget password

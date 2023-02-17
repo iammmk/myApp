@@ -60,17 +60,17 @@ async function updateStatusById(req, res) {
       status.uploadTime = Date.now();
       let updatedStatus = await status.save();
       res.status(200).json({
-        message: "Task updated successfully..",
+        message: "Status updated successfully..",
         data: updatedStatus,
       });
     } else {
       res.status(501).json({
-        message: "Failed to update the task..",
+        message: "Failed to update the status..",
       });
     }
   } catch (error) {
     res.status(501).json({
-      message: "Failed to update the task..",
+      message: "Failed to update the status..",
       error,
     });
   }
@@ -84,6 +84,9 @@ async function deleteStatusById(req, res) {
 
     if (status && status.userId === uid) {
       await deleteStatus(statusId);
+      let user = await userModel.findById(uid);
+      user.totalStatus = user.totalStatus - 1;
+      await user.save();
 
       res.status(200).json({
         message: "status deleted successfully",
@@ -170,7 +173,7 @@ const deleteComment = async (commentId) => {
 
   // Delete the comment
   await commentModel.findByIdAndDelete(commentId);
-  await likeModel.deleteMany({statusId: commentId})
+  await likeModel.deleteMany({ statusId: commentId });
 };
 
 const deleteStatus = async (statusId) => {
@@ -184,7 +187,7 @@ const deleteStatus = async (statusId) => {
 
   // Delete the status
   await statusModel.findByIdAndDelete(statusId);
-  await likeModel.deleteMany({statusId: statusId})
+  await likeModel.deleteMany({ statusId: statusId });
 };
 
 module.exports.createStatus = createStatus;
