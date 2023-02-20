@@ -28,7 +28,7 @@ async function addLike(req, res) {
           (await statusModel.findById(id)) || (await commentModel.findById(id));
 
         status.totalLikes = status.totalLikes + 1;
-
+        status.likedBy.push(uid)
         await status.save();
         res.status(200).json({
           message: "Added new like !!",
@@ -101,10 +101,13 @@ async function removeLike(req, res) {
         let status =
           (await statusModel.findById(id)) || (await commentModel.findById(id));
         status.totalLikes = status.totalLikes - 1;
+        status.likedBy = status.likedBy.filter(
+          (element) => element !== uid
+        );
         await status.save();
 
         res.status(200).json({
-          message: "Unliked the status/comment",
+          message: "Unliked",
           data: unlikedStatus,
         });
       } else {

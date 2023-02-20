@@ -15,24 +15,40 @@ async function getAllUsers(req, res) {
   }
 }
 
+async function getUserByUserId(req, res) {
+  try {
+    let id = req.params.id;
+    let user = await userModel.findById(id);
+    if (user) {
+      res.status(200).json({
+        message: "Got the user",
+        data: user,
+      });
+    } else {
+      res.status(501).json({
+        message: "Pass correct user id",
+      });
+    }
+  } catch (error) {
+    res.status(501).json({
+      message: "Failed to get the user",
+      error,
+    });
+  }
+}
+
 // User Profile info
 async function getUserProfile(req, res) {
   try {
     let id = req.id;
     let user = await userModel.findById(id);
-    if (user) {
-      res.status(200).json({
-        message: "Got the user !",
-        data: user,
-      });
-    } else {
-      res.status(501).json({
-        message: "Incorrect Id .",
-      });
-    }
+    res.status(200).json({
+      message: "Got the user !",
+      data: user,
+    });
   } catch (error) {
     res.status(501).json({
-      message: "Failed to get users",
+      message: "Login first",
       error,
     });
   }
@@ -93,6 +109,7 @@ async function updateUserProfile(req, res) {
 // }
 
 module.exports.getAllUsers = getAllUsers;
+module.exports.getUserByUserId = getUserByUserId;
 module.exports.getUserProfile = getUserProfile;
 module.exports.updateUserProfile = updateUserProfile;
 // module.exports.deleteUserProfile = deleteUserProfile;

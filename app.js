@@ -1,10 +1,18 @@
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
+const cors= require("cors")
 require("dotenv").config() //to use .env file data
 
-app.use(express.json());
+
+const corsOptions = {
+  origin: 'http://localhost:8080',
+  credentials: true
+};
+
 app.use(cookieParser());
+app.use(express.json());
+app.use(cors(corsOptions))
 
 // import routers
 const userRouter = require("./routers/userRouter");

@@ -3,6 +3,7 @@ const userRouter = express.Router();
 
 const {
   getAllUsers,
+  getUserByUserId,
   getUserProfile,
   updateUserProfile,
   // deleteUserProfile,
@@ -22,11 +23,13 @@ userRouter.use(protectRoute);
 
 userRouter.route("").get(getAllUsers);
 
+userRouter.route("/userProfile/:id").get(getUserByUserId);
+
 userRouter.route("/:id/followers").get(getFollowersByUserId);
 userRouter.route("/:id/followings").get(getFollowingByUserId);
 userRouter.route("/:id/like").get(statusLikedByUserId);
 
-userRouter.route("/userProfile").get(getUserProfile).put(updateUserProfile);
+userRouter.route("/myProfile").get(getUserProfile).put(updateUserProfile);
 // .delete(deleteUserProfile);
 
 userRouter.route("/userProfile/statusByFollowing").get(getStatusByFollowing);

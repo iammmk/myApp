@@ -8,11 +8,13 @@ const userModel = require("../models/userModel");
 async function createStatus(req, res) {
   try {
     let { status } = req.body;
+    let uid = req.id;
+    let user = await userModel.findById(uid);
     const newStatus = {
-      userId: req.id,
+      userId: uid,
+      uploadedBy: user.name,
       status: status,
     };
-    let user = await userModel.findById(req.id);
     let addedStatus = await statusModel.create(newStatus);
     user.totalStatus = user.totalStatus + 1;
     await user.save();

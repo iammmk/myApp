@@ -13,6 +13,9 @@ const statusSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  uploadedBy:{
+    type: String
+  },
   status: {
     type: String,
     required: true,
@@ -39,10 +42,14 @@ const statusSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  likedBy:{
+    type:[String] ,
+    default:[]
+  },
   lastEdit: String,
   uploadTime: {
     type: Number, // check type
-    default: Date.now(),
+    default: Date.now,
   },
 });
 
