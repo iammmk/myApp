@@ -49,20 +49,23 @@ async function getAllStatus(req, res) {
 async function updateStatusById(req, res) {
   try {
     let statusId = req.params.id;
+    let uid= req.id
     // check if the user has that status with given id
     let status = await statusModel.findById(statusId);
-    if (status && status.userId === req.id) {
+    console.log(uid)
+    // console.log(status.userId)
+    if (status && status.userId === uid) {
       let lastStatus = status.status;
-      let sentStatus = req.body;
+      let sentStatus = req.body
       for (let key in sentStatus) {
         status[key] = sentStatus[key];
       }
       status.isEdited = true;
       status.lastEdit = lastStatus;
-      status.uploadTime = Date.now();
+      status.uploadTime = Date.now()
       let updatedStatus = await status.save();
       res.status(200).json({
-        message: "Status updated successfully..",
+        message: "Status updated successfully",
         data: updatedStatus,
       });
     } else {
