@@ -12,7 +12,7 @@ async function createStatus(req, res) {
     let user = await userModel.findById(uid);
     const newStatus = {
       userId: uid,
-      uploadedBy: user.name,
+      uploadedBy: user.username,
       status: status,
     };
     let addedStatus = await statusModel.create(newStatus);
@@ -49,20 +49,20 @@ async function getAllStatus(req, res) {
 async function updateStatusById(req, res) {
   try {
     let statusId = req.params.id;
-    let uid= req.id
+    let uid = req.id;
     // check if the user has that status with given id
     let status = await statusModel.findById(statusId);
-    console.log(uid)
+    console.log(uid);
     // console.log(status.userId)
     if (status && status.userId === uid) {
       let lastStatus = status.status;
-      let sentStatus = req.body
+      let sentStatus = req.body;
       for (let key in sentStatus) {
         status[key] = sentStatus[key];
       }
       status.isEdited = true;
       status.lastEdit = lastStatus;
-      status.uploadTime = Date.now()
+      status.uploadTime = Date.now();
       let updatedStatus = await status.save();
       res.status(200).json({
         message: "Status updated successfully",
@@ -194,6 +194,24 @@ const deleteStatus = async (statusId) => {
   await statusModel.findByIdAndDelete(statusId);
   await likeModel.deleteMany({ statusId: statusId });
 };
+
+// async function getName(uname) {
+//   try {
+//     let user = await userModel.find({ username: uname });
+//     if (user.length) {
+//       return user[0].name;
+//     } else {
+//       res.status(501).json({
+//         message: "user doesnt exist",
+//       });
+//     }
+//   } catch (error) {
+//     res.status(501).json({
+//       message: "Failed to find user",
+//       error,
+//     });
+//   }
+// }
 
 module.exports.createStatus = createStatus;
 module.exports.getAllStatus = getAllStatus;

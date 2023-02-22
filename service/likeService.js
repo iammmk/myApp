@@ -28,7 +28,7 @@ async function addLike(req, res) {
           (await statusModel.findById(id)) || (await commentModel.findById(id));
 
         status.totalLikes = status.totalLikes + 1;
-        status.likedBy.push(uid)
+        status.likedBy.push(uid);
         await status.save();
         res.status(200).json({
           message: "Added new like !!",
@@ -56,13 +56,20 @@ async function addLike(req, res) {
 async function getLikesByStatusId(req, res) {
   try {
     let id = req.params.id;
+    let users = [];
     //check if statusId provided exists
-    let status = await statusModel.findById(id) || await commentModel.findById(id)
+    let status =
+      (await statusModel.findById(id)) || (await commentModel.findById(id));
     if (status) {
       let userList = await likeModel.find({ statusId: id });
+      for (let item of userList) {
+        let uid = item.userId;
+        let user = await userModel.findById(uid);
+        users.push(user);
+      }
       res.status(200).json({
         message: "Fetched list of users who liked the status/comment",
-        data: userList,
+        data: users,
       });
     } else {
       res.status(501).json({
@@ -101,9 +108,7 @@ async function removeLike(req, res) {
         let status =
           (await statusModel.findById(id)) || (await commentModel.findById(id));
         status.totalLikes = status.totalLikes - 1;
-        status.likedBy = status.likedBy.filter(
-          (element) => element !== uid
-        );
+        status.likedBy = status.likedBy.filter((element) => element !== uid);
         await status.save();
 
         res.status(200).json({

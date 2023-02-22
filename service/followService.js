@@ -147,7 +147,7 @@ async function getFollowersByUserId(req, res) {
         result.push(people);
       }
       res.status(200).json({
-        message: "Following list fetched",
+        message: "Followers list fetched",
         data: result,
       });
     } else {

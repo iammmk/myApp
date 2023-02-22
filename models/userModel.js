@@ -42,10 +42,13 @@ let userSchema = new mongoose.Schema({
   },
   bio: String,
   joinedOn: {
-    type: Date,
-    default: Date.now(),
+    type: Number,
+    default: Date.now,
   },
-  dob: Date, //handle format from frontend
+  dob: {
+    type: Date,
+    default: null
+  }, //handle format from frontend
   password: {
     type: String,
     minLength: [8, "Min 8 characters required."],
@@ -69,10 +72,18 @@ let userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  // followersList: {
+  //   type: [String],
+  //   default: [],
+  // },
   followingCount: {
     type: Number,
     default: 0,
   },
+  // followingList: {
+  //   type: [String],
+  //   default: [],
+  // },
   // to be done-----> profile pic of user
   // pImage: {
   //   type: String,

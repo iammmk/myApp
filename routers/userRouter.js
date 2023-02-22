@@ -32,7 +32,7 @@ userRouter.route("/:id/like").get(statusLikedByUserId);
 userRouter.route("/myProfile").get(getUserProfile).put(updateUserProfile);
 // .delete(deleteUserProfile);
 
-userRouter.route("/userProfile/statusByFollowing").get(getStatusByFollowing);
+userRouter.route("/userProfile/status/Following").get(getStatusByFollowing);
 
 userRouter.route("/logout").get(logout);
 
