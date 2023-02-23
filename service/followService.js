@@ -163,7 +163,39 @@ async function getFollowersByUserId(req, res) {
   }
 }
 
+// get users not followed by user
+async function getFollowSuggestion(req, res) {
+  try {
+    let uId = req.id; //ownerId
+    let SuggestionList = [];
+    let allUsers = await userModel.find({});
+    for (let item of allUsers) {
+      if (item._id != uId) {
+        let isFollowing = await followModel.find({
+          $and: [{ toId: item._id }, { fromId: uId }],
+        });
+        if (!isFollowing.length) {
+          let unfollowedUser = await userModel.findById(item._id);
+          SuggestionList.push(unfollowedUser);
+        }
+      }
+    }
+
+    res.status(200).json({
+      message: "Suggestion list fetched",
+      data: SuggestionList,
+    });
+  } catch (error) {
+    res.status(501).json({
+      message: "Failed to fetch follow suggestion",
+      error,
+    });
+  }
+}
+
+
 module.exports.followUserByUserId = followUserByUserId;
 module.exports.unfollowUserByUserId = unfollowUserByUserId;
 module.exports.getFollowersByUserId = getFollowersByUserId;
 module.exports.getFollowingByUserId = getFollowingByUserId;
+module.exports.getFollowSuggestion = getFollowSuggestion;

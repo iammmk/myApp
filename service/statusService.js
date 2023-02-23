@@ -30,16 +30,47 @@ async function createStatus(req, res) {
   }
 }
 
+// async function getAllStatus(req, res) {
+//   try {
+//     let status = await statusModel.find({});
+//     res.status(200).json({
+//       message: "Got all status !!",
+//       data: status,
+//     });
+//   } catch (error) {
+//     res.status(501).json({
+//       message: "Failed to get status",
+//       error,
+//     });
+//   }
+// }
+
+// API for front page status (status by following + own status)
 async function getAllStatus(req, res) {
   try {
-    let status = await statusModel.find({});
+    let uid = req.id;
+    let followingList = await followModel.find({ fromId: uid });
+    let status = [];
+    // status by following
+    for (let following of followingList) {
+      let user = following.toId;
+      let userStatus = await statusModel.find({ userId: user });
+      for (let item of userStatus) {
+        status.push(item);
+      }
+    }
+    // own status
+    let ownStatus = await statusModel.find({ userId: uid });
+    for (let item of ownStatus) {
+      status.push(item);
+    }
     res.status(200).json({
-      message: "Got all status !!",
+      message: "Fetched all status",
       data: status,
     });
   } catch (error) {
     res.status(501).json({
-      message: "Failed to get status",
+      message: "Failed to fetch status",
       error,
     });
   }
@@ -135,31 +166,31 @@ async function getStatusByUserId(req, res) {
 }
 
 // get status of the users you follow
-async function getStatusByFollowing(req, res) {
-  try {
-    let uid = req.id;
-    let followingList = await followModel.find({ fromId: uid });
-    let status = [];
+// async function getStatusByFollowing(req, res) {
+//   try {
+//     let uid = req.id;
+//     let followingList = await followModel.find({ fromId: uid });
+//     let status = [];
 
-    for (let following of followingList) {
-      let user = following.toId;
-      let userStatus = await statusModel.find({ userId: user });
+//     for (let following of followingList) {
+//       let user = following.toId;
+//       let userStatus = await statusModel.find({ userId: user });
 
-      for (let item of userStatus) {
-        status.push(item);
-      }
-    }
-    res.status(200).json({
-      message: "Fetched status from your following",
-      data: status,
-    });
-  } catch (error) {
-    res.status(501).json({
-      message: "Failed to fetch status of your following list",
-      error,
-    });
-  }
-}
+//       for (let item of userStatus) {
+//         status.push(item);
+//       }
+//     }
+//     res.status(200).json({
+//       message: "Fetched status from your following",
+//       data: status,
+//     });
+//   } catch (error) {
+//     res.status(501).json({
+//       message: "Failed to fetch status of your following list",
+//       error,
+//     });
+//   }
+// }
 
 // recursion
 const deleteComment = async (commentId) => {
@@ -218,4 +249,4 @@ module.exports.getAllStatus = getAllStatus;
 module.exports.deleteStatusById = deleteStatusById;
 module.exports.updateStatusById = updateStatusById;
 module.exports.getStatusByUserId = getStatusByUserId;
-module.exports.getStatusByFollowing = getStatusByFollowing;
+// module.exports.getStatusByFollowing = getStatusByFollowing;

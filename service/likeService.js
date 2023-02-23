@@ -137,13 +137,19 @@ async function removeLike(req, res) {
 async function statusLikedByUserId(req, res) {
   try {
     let uid = req.params.id;
+    Status=[]
     //check if the userId provided exists
     let user = await userModel.findById(uid);
     if (user) {
-      let likedStatus = await likeModel.find({ userId: uid });
+      let likedStatusList = await likeModel.find({ userId: uid });
+      for (let item of likedStatusList){
+        statusId= item.statusId
+        let likedStatus= await statusModel.findById(statusId)
+        Status.push(likedStatus)
+      }
       res.status(200).json({
-        mesaage: "Liked status/comment by user fetched successfully",
-        data: likedStatus,
+        message: "Liked content by user fetched successfully",
+        data: Status,
       });
     } else {
       res.status(501).json({
@@ -152,7 +158,7 @@ async function statusLikedByUserId(req, res) {
     }
   } catch (error) {
     res.status(501).json({
-      message: "Failed to load liked status/comment",
+      message: "Failed to load liked content",
       error,
     });
   }

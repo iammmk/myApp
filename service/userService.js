@@ -108,7 +108,7 @@ async function updateUserProfile(req, res) {
 //   }
 // }
 
-module.exports.getAllUsers = getAllUsers;
+// module.exports.getAllUsers = getAllUsers;
 module.exports.getUserByUserId = getUserByUserId;
 module.exports.getUserProfile = getUserProfile;
 module.exports.updateUserProfile = updateUserProfile;
