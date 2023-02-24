@@ -18,6 +18,9 @@ const commentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  uploadedBy:{
+    type: String //username
+  },
   comment: {
     type: String,
     required: true,
@@ -39,13 +42,17 @@ const commentSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  likedBy:{
+    type:[String] ,
+    default:[]
+  },
   totalComments: {
     type: Number,
     default: 0,
   },
-  commentTime: {
+  uploadTime: {
     type: Number, // check type
-    default: Date.now(),
+    default: Date.now,
   },
   isEdited: {
     type: Boolean,

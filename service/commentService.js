@@ -1,6 +1,7 @@
 const statusModel = require("../models/statusModel");
 const commentModel = require("../models/commentModel");
 const likeModel = require("../models/likeModel");
+const userModel = require("../models/userModel");
 
 //get comments of a status
 async function getCommentByStatusId(req, res) {
@@ -12,7 +13,7 @@ async function getCommentByStatusId(req, res) {
       let comments = await commentModel.find({ statusId: id });
 
       res.status(200).json({
-        message: "Fetched comments of the status",
+        message: "Fetched comments",
         data: comments,
       });
     } else {
@@ -22,7 +23,7 @@ async function getCommentByStatusId(req, res) {
     }
   } catch (error) {
     res.status(501).json({
-      message: "Failed to fetch comments of the status",
+      message: "Failed to fetch comments ",
       error,
     });
   }
@@ -60,7 +61,7 @@ async function getChildCommentsByCommentId(req, res) {
       let comments = await commentModel.find({ statusId: id });
 
       res.status(200).json({
-        message: "Fetched comments of the comment",
+        message: "Fetched comments",
         data: comments,
       });
     } else {
@@ -76,29 +77,33 @@ async function getChildCommentsByCommentId(req, res) {
   }
 }
 
-//add comment to a status
+//add comment to a status/comment
 async function addCommentByStatusId(req, res) {
   try {
-    let id = req.params.id;
+    let id = req.params.id; // parent status/comment id
     let uid = req.id;
 
-    let status = await statusModel.findById(id);
-    if (status) {
-      let statusByUserId = status.userId;
+    let user = await userModel.findById(uid);
+    let parent =
+      (await statusModel.findById(id)) || (await commentModel.findById(id));
+
+    if (parent) {
+      let mainStatusByUserId = parent.mainStatusByUserId || parent.userId; // main status is uploaded by
       const newComment = {
         statusId: id,
         userId: uid,
+        uploadedBy: user.username,
         comment: req.body.comment,
-        mainStatusByUserId: statusByUserId,
+        mainStatusByUserId: mainStatusByUserId,
       };
       let addedComment = await commentModel.create(newComment);
 
-      status.childCommentIds.push(addedComment._id);
-      status.totalComments = status.totalComments + 1;
-      await status.save();
+      parent.childCommentIds.push(addedComment._id);
+      parent.totalComments = parent.totalComments + 1;
+      await parent.save();
 
       res.status(200).json({
-        message: "Added new comment to the status !!",
+        message: "Added new comment",
         data: addedComment,
       });
     } else {
@@ -115,73 +120,74 @@ async function addCommentByStatusId(req, res) {
 }
 
 //add comment to a comment
-async function addCommentByCommentId(req, res) {
-  try {
-    let id = req.params.id; // comment id where user wants to add comment
-    let uid = req.id;
+// async function addCommentByCommentId(req, res) {
+//   try {
+//     let id = req.params.id; // comment id where user wants to add comment
+//     let uid = req.id;
 
-    let comment = await commentModel.findById(id);
-    if (comment) {
-      const newComment = {
-        statusId: id,
-        userId: uid,
-        comment: req.body.comment,
-        mainStatusByUserId: comment.mainStatusByUserId,
-      };
-      let addedComment = await commentModel.create(newComment);
+//     let comment = await commentModel.findById(id);
+//     if (comment) {
+//       const newComment = {
+//         statusId: id,
+//         userId: uid,
+//         comment: req.body.comment,
+//         mainStatusByUserId: comment.mainStatusByUserId,
+//       };
+//       let addedComment = await commentModel.create(newComment);
 
-      comment.childCommentIds.push(addedComment._id);
-      comment.totalComments = comment.totalComments + 1;
-      await comment.save();
+//       comment.childCommentIds.push(addedComment._id);
+//       comment.totalComments = comment.totalComments + 1;
+//       await comment.save();
 
-      res.status(200).json({
-        message: "Added a new comment to the comment !!",
-        data: addedComment,
-      });
-    } else {
-      res.status(501).json({
-        message: "Pass correct comment id !!",
-      });
-    }
-  } catch (error) {
-    res.status(501).json({
-      message: "Failed to comment on the comment",
-      error,
-    });
-  }
-}
+//       res.status(200).json({
+//         message: "Added a new comment to the comment !!",
+//         data: addedComment,
+//       });
+//     } else {
+//       res.status(501).json({
+//         message: "Pass correct comment id !!",
+//       });
+//     }
+//   } catch (error) {
+//     res.status(501).json({
+//       message: "Failed to comment on the comment",
+//       error,
+//     });
+//   }
+// }
 
-async function updateComment(req, res) {
-  try {
-    let id = req.params.id;
-    let uid = req.id;
-    let selectedComment = await commentModel.findById(id);
+// moved to updateContentByContentId
+// async function updateComment(req, res) {
+//   try {
+//     let id = req.params.id;
+//     let uid = req.id;
+//     let selectedComment = await commentModel.findById(id);
 
-    if (selectedComment && selectedComment.userId === uid) {
-      let lastComment = selectedComment.comment;
-      for (let key in req.body) {
-        selectedComment[key] = req.body[key];
-      }
-      selectedComment.commentTime = Date.now();
-      selectedComment.isEdited = true;
-      selectedComment.lastEdit = lastComment;
-      let updatedComment = await selectedComment.save();
-      res.status(200).json({
-        message: "Comment updated !!",
-        data: updatedComment,
-      });
-    } else {
-      res.status(501).json({
-        message: "Pass correct comment id",
-      });
-    }
-  } catch (error) {
-    res.status(501).json({
-      message: "Failed to update the comment",
-      error,
-    });
-  }
-}
+//     if (selectedComment && selectedComment.userId === uid) {
+//       let lastComment = selectedComment.comment;
+//       for (let key in req.body) {
+//         selectedComment[key] = req.body[key];
+//       }
+//       selectedComment.commentTime = Date.now();
+//       selectedComment.isEdited = true;
+//       selectedComment.lastEdit = lastComment;
+//       let updatedComment = await selectedComment.save();
+//       res.status(200).json({
+//         message: "Comment updated !!",
+//         data: updatedComment,
+//       });
+//     } else {
+//       res.status(501).json({
+//         message: "Pass correct comment id",
+//       });
+//     }
+//   } catch (error) {
+//     res.status(501).json({
+//       message: "Failed to update the comment",
+//       error,
+//     });
+//   }
+// }
 
 async function removeComment(req, res) {
   try {
@@ -194,7 +200,7 @@ async function removeComment(req, res) {
       await deleteComment(commentId);
 
       res.status(200).json({
-        message: "comment deleted",
+        message: "Deleted",
         data: comment,
       });
     } else {
@@ -234,13 +240,13 @@ const deleteComment = async (commentId) => {
 
   // Delete the comment
   await commentModel.findByIdAndDelete(commentId);
-  await likeModel.deleteMany({statusId: commentId})
+  await likeModel.deleteMany({ statusId: commentId });
 };
 
 module.exports.addCommentByStatusId = addCommentByStatusId;
-module.exports.addCommentByCommentId = addCommentByCommentId;
+// module.exports.addCommentByCommentId = addCommentByCommentId;
 module.exports.getCommentByStatusId = getCommentByStatusId;
 module.exports.getCommentByCommentId = getCommentByCommentId;
 module.exports.getChildCommentsByCommentId = getChildCommentsByCommentId;
-module.exports.updateComment = updateComment;
+// module.exports.updateComment = updateComment;
 module.exports.removeComment = removeComment;

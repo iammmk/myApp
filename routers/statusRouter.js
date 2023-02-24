@@ -5,8 +5,9 @@ const {
   createStatus,
   getAllStatus,
   deleteStatusById,
-  updateStatusById,
-  getStatusByUserId,
+  // updateStatusById,
+  getStatusByStatusId,
+  updateContentById,
 } = require("../service/statusService");
 
 const {
@@ -21,8 +22,9 @@ statusRouter.route("").get(getAllStatus).post(createStatus);
 
 statusRouter
   .route("/:id")
-  .get(getStatusByUserId) //userId
-  .put(updateStatusById) //statusId
+  .get(getStatusByStatusId) //statusId
+  // .put(updateStatusById) //statusId
+  .put(updateContentById) // statusId or commentId
   .delete(deleteStatusById); //statusId
 
 statusRouter

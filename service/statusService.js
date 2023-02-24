@@ -77,36 +77,38 @@ async function getAllStatus(req, res) {
 }
 
 // shorten the code
-async function updateStatusById(req, res) {
+// update status/comment by their Id
+async function updateContentById(req, res) {
   try {
-    let statusId = req.params.id;
+    let contentId = req.params.id;
     let uid = req.id;
-    // check if the user has that status with given id
-    let status = await statusModel.findById(statusId);
-    console.log(uid);
-    // console.log(status.userId)
-    if (status && status.userId === uid) {
-      let lastStatus = status.status;
-      let sentStatus = req.body;
-      for (let key in sentStatus) {
-        status[key] = sentStatus[key];
+    // check if the user has that status/comment with given id
+    let content =
+      (await statusModel.findById(contentId)) ||
+      (await commentModel.findById(contentId));
+
+    if (content && content.userId === uid) {
+      let lastContent = content.status || content.comment;
+      let sentContent = req.body;
+      for (let key in sentContent) {
+        content[key] = sentContent[key];
       }
-      status.isEdited = true;
-      status.lastEdit = lastStatus;
-      status.uploadTime = Date.now();
-      let updatedStatus = await status.save();
+      content.isEdited = true;
+      content.lastEdit = lastContent;
+      content.uploadTime = Date.now();
+      let updatedContent = await content.save();
       res.status(200).json({
-        message: "Status updated successfully",
-        data: updatedStatus,
+        message: "Content updated successfully",
+        data: updatedContent,
       });
     } else {
       res.status(501).json({
-        message: "Failed to update the status..",
+        message: "Failed to update the content",
       });
     }
   } catch (error) {
     res.status(501).json({
-      message: "Failed to update the status..",
+      message: "Failed to update the content",
       error,
     });
   }
@@ -125,7 +127,7 @@ async function deleteStatusById(req, res) {
       await user.save();
 
       res.status(200).json({
-        message: "status deleted successfully",
+        message: "Deleted",
         data: status,
       });
     } else {
@@ -136,6 +138,30 @@ async function deleteStatusById(req, res) {
   } catch (error) {
     res.status(501).json({
       message: "Failed to delete the status..",
+      error,
+    });
+  }
+}
+
+//get status by statusId
+async function getStatusByStatusId(req, res) {
+  try {
+    let statusId = req.params.id;
+    let status = await statusModel.findById(statusId);
+    if (status) {
+      res.status(200).json({
+        message: "Status Fetched",
+        data: status,
+      });
+    } else {
+      res.status(501).json({
+        message: "status id incorrect",
+        data: status,
+      });
+    }
+  } catch (error) {
+    res.status(501).json({
+      message: "Failed to fetch the status",
       error,
     });
   }
@@ -247,6 +273,6 @@ const deleteStatus = async (statusId) => {
 module.exports.createStatus = createStatus;
 module.exports.getAllStatus = getAllStatus;
 module.exports.deleteStatusById = deleteStatusById;
-module.exports.updateStatusById = updateStatusById;
+module.exports.updateContentById = updateContentById;
 module.exports.getStatusByUserId = getStatusByUserId;
-// module.exports.getStatusByFollowing = getStatusByFollowing;
+module.exports.getStatusByStatusId = getStatusByStatusId;
