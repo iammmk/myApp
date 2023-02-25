@@ -1,18 +1,17 @@
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
-const cors= require("cors")
-require("dotenv").config() //to use .env file data
-
+const cors = require("cors");
+require("dotenv").config(); //to use .env file data
 
 const corsOptions = {
-  origin: 'http://localhost:8080',
-  credentials: true
+  origin: "http://localhost:8080",
+  credentials: true,
 };
 
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
 
 // import routers
 const userRouter = require("./routers/userRouter");
@@ -29,8 +28,8 @@ app.use("/like", likeRouter);
 app.use("/comment", commentRouter);
 app.use("/follow", followRouter);
 
-let port = 3000;
+let port = process.env.PORT || 3000;
 
 app.listen(port, function () {
-  console.log("server started at port 3000");
+  console.log(`server started at port ${PORT}`);
 });
