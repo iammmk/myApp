@@ -36,7 +36,11 @@ async function login(req, res) {
       (await userModel.findOne({ username: username }));
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign({ id: user._id }, SECRET_KEY);
-      res.cookie("jwt", token, { httpOnly: true });
+      res.cookie("jwt", token, {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+      });
       res.status(200).json({
         message: "Login successful!",
         data: user,
@@ -56,7 +60,7 @@ async function login(req, res) {
 
 async function logout(req, res) {
   try {
-    res.clearCookie("jwt",{ httpOnly: true });
+    res.clearCookie("jwt", { httpOnly: true });
     // res.redirect("/");
     res.status(200).json({
       message: "Logout successful",
