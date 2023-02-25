@@ -28,8 +28,8 @@ app.use("/like", likeRouter);
 app.use("/comment", commentRouter);
 app.use("/follow", followRouter);
 
-let port = process.env.PORT || 3000;
+let PORT = process.env.PORT || 3000;
 
-app.listen(port, function () {
+app.listen(PORT, function () {
   console.log(`server started at port ${PORT}`);
 });
