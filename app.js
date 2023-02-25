@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config(); //to use .env file data
 
 const corsOptions = {
-  origin: "http://localhost:8080",
+  origin: "https://myappmmk.netlify.app/",
   credentials: true,
 };
 
