@@ -43,7 +43,7 @@ async function login(req, res) {
       });
     } else {
       res.status(401).json({
-        message: "Incorrect email/password",
+        message: "Incorrect credentials",
       });
     }
   } catch (error) {
