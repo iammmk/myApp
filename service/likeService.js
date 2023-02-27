@@ -2,12 +2,13 @@ const statusModel = require("../models/statusModel");
 const likeModel = require("../models/likeModel");
 const userModel = require("../models/userModel");
 const commentModel = require("../models/commentModel");
+const notificationModel = require("../models/notificationModel");
 
 async function addLike(req, res) {
   try {
     let id = req.params.id;
     let uid = req.id;
-
+    let user = await userModel.findById(uid);
     //check if the status/comment exists
     let content =
       (await statusModel.findById(id)) || (await commentModel.findById(id));
@@ -30,6 +31,22 @@ async function addLike(req, res) {
         status.totalLikes = status.totalLikes + 1;
         status.likedBy.push(uid);
         await status.save();
+        //push new notification
+        if (status.userId !== uid) {
+          let notification = {
+            toId: status.userId,
+            fromId: uid,
+            fromUsername: user.username,
+            activity: status.status ? "status like" : "comment like",
+            contentId: status._id,
+          };
+          let addedNotification = await notificationModel.create(notification);
+          // update notification count
+          let receiver = await userModel.findById(status.userId);
+          receiver.newNotificationCount = receiver.newNotificationCount + 1;
+          await receiver.save();
+        }
+
         res.status(200).json({
           message: "Added new like !!",
           data: addedLike,

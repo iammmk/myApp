@@ -43,7 +43,7 @@ async function getUserProfile(req, res) {
     let id = req.id;
     let user = await userModel.findById(id);
     res.status(200).json({
-      message: "Got the user !",
+      message: "Got the profile",
       data: user,
     });
   } catch (error) {

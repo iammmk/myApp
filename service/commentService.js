@@ -2,6 +2,7 @@ const statusModel = require("../models/statusModel");
 const commentModel = require("../models/commentModel");
 const likeModel = require("../models/likeModel");
 const userModel = require("../models/userModel");
+const notificationModel = require("../models/notificationModel");
 
 //get comments of a status
 async function getCommentByStatusId(req, res) {
@@ -101,6 +102,22 @@ async function addCommentByStatusId(req, res) {
       parent.childCommentIds.push(addedComment._id);
       parent.totalComments = parent.totalComments + 1;
       await parent.save();
+
+      //push new notification
+      if (parent.userId !== uid) {
+        let notification = {
+          toId: parent.userId,
+          fromId: uid,
+          fromUsername: user.username,
+          activity: "add comment",
+          contentId: addedComment._id,
+        };
+        let addedNotification = await notificationModel.create(notification);
+        // update notification count
+        let receiver = await userModel.findById(parent.userId);
+        receiver.newNotificationCount = receiver.newNotificationCount + 1;
+        await receiver.save();
+      }
 
       res.status(200).json({
         message: "Added new comment",

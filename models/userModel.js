@@ -80,6 +80,10 @@ let userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  newNotificationCount: {
+    type: Number,
+    default: 0,
+  },
   // followingList: {
   //   type: [String],
   //   default: [],

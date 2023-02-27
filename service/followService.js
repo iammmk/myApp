@@ -1,5 +1,6 @@
 const followModel = require("../models/followModel");
 const userModel = require("../models/userModel");
+const notificationModel = require("../models/notificationModel");
 
 async function followUserByUserId(req, res) {
   try {
@@ -27,6 +28,18 @@ async function followUserByUserId(req, res) {
 
         await toUser.save();
         await fromUser.save();
+
+        //push new notification
+        let notification = {
+          toId: id,
+          fromId: uid,
+          fromUsername: fromUser.username,
+          activity: "follow",
+        };
+        let addedNotification = await notificationModel.create(notification);
+        // update notification count
+        toUser.newNotificationCount = toUser.newNotificationCount + 1;
+        await toUser.save();
 
         res.status(200).json({
           message: "You started following the user",
@@ -192,7 +205,6 @@ async function getFollowSuggestion(req, res) {
     });
   }
 }
-
 
 module.exports.followUserByUserId = followUserByUserId;
 module.exports.unfollowUserByUserId = unfollowUserByUserId;
