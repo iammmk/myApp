@@ -37,6 +37,7 @@ async function addLike(req, res) {
             toId: status.userId,
             fromId: uid,
             fromUsername: user.username,
+            fromImage: user.pImage,
             activity: status.status ? "status like" : "comment like",
             contentId: status._id,
           };

@@ -110,6 +110,7 @@ async function addCommentByStatusId(req, res) {
           toId: parent.userId,
           fromId: uid,
           fromUsername: user.username,
+          fromImage: user.pImage,
           activity: "add comment",
           contentId: addedComment._id,
         };

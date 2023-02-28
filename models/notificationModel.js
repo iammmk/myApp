@@ -23,6 +23,9 @@ const notificationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  fromImage: {
+    type: String,
+  },
   activity: {
     type: String,
     required: true,

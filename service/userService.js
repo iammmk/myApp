@@ -1,6 +1,8 @@
 const statusModel = require("../models/statusModel");
+const commentModel = require("../models/commentModel");
 const userModel = require("../models/userModel");
 const cloudinary = require("../utils/cloudinary");
+const notificationModel = require("../models/notificationModel");
 
 async function getAllUsers(req, res) {
   try {
@@ -77,7 +79,7 @@ async function updateUserProfile(req, res) {
         }
       }
       let updatedUser = await user.save();
-
+      
       // update profile pic in status
       let allStatus = await statusModel.find({ userId: id });
       for (let status of allStatus) {
@@ -90,6 +92,13 @@ async function updateUserProfile(req, res) {
       for (let comment of allComments) {
         comment["userImage"] = updatedUser["pImage"];
         await comment.save();
+      }
+
+      // update profile pic in notification
+      let allNotifications= await notificationModel.find({fromId: id})
+      for (let notification of allNotifications){
+        notification["fromImage"]= updatedUser["pImage"]
+        await notification.save()
       }
 
       res.status(200).json({

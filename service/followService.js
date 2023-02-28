@@ -34,6 +34,7 @@ async function followUserByUserId(req, res) {
           toId: id,
           fromId: uid,
           fromUsername: fromUser.username,
+          fromImage: fromUser.pImage,
           activity: "follow",
         };
         let addedNotification = await notificationModel.create(notification);
