@@ -1,4 +1,6 @@
+const statusModel = require("../models/statusModel");
 const userModel = require("../models/userModel");
+const cloudinary = require("../utils/cloudinary");
 
 async function getAllUsers(req, res) {
   try {
@@ -60,12 +62,36 @@ async function updateUserProfile(req, res) {
     let id = req.id;
     let user = await userModel.findById(id);
 
+    const result = await cloudinary.uploader.upload(req.body.pImage, {
+      folder: "users",
+      // width: 300,
+      // crop: "scale"
+    });
     if (user) {
       let updateObj = req.body;
       for (let key in updateObj) {
-        user[key] = updateObj[key];
+        if (key === "pImage") {
+          user["pImage"] = result.secure_url;
+        } else {
+          user[key] = updateObj[key];
+        }
       }
       let updatedUser = await user.save();
+
+      // update profile pic in status
+      let allStatus = await statusModel.find({ userId: id });
+      for (let status of allStatus) {
+        status["userImage"] = updatedUser["pImage"];
+        await status.save();
+      }
+
+      // update profile pic in comment
+      let allComments = await commentModel.find({ userId: id });
+      for (let comment of allComments) {
+        comment["userImage"] = updatedUser["pImage"];
+        await comment.save();
+      }
+
       res.status(200).json({
         message: "User updated successfully !",
         data: updatedUser,

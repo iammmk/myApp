@@ -94,6 +94,7 @@ async function addCommentByStatusId(req, res) {
         statusId: id,
         userId: uid,
         uploadedBy: user.username,
+        userImage: user.pImage,
         comment: req.body.comment,
         mainStatusByUserId: mainStatusByUserId,
       };

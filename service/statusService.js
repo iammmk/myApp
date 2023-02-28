@@ -13,6 +13,7 @@ async function createStatus(req, res) {
     const newStatus = {
       userId: uid,
       uploadedBy: user.username,
+      userImage: user.pImage,
       status: status,
     };
     let addedStatus = await statusModel.create(newStatus);

@@ -12,7 +12,7 @@ mongoose
   });
 
 const bcrypt = require("bcryptjs");
-const { isEmailValid, isUsernameValid } = require("../service/util");
+const { isEmailValid, isUsernameValid } = require("../utils/validation");
 
 // User schema
 let userSchema = new mongoose.Schema({
@@ -88,11 +88,11 @@ let userSchema = new mongoose.Schema({
   //   type: [String],
   //   default: [],
   // },
-  // to be done-----> profile pic of user
-  // pImage: {
-  //   type: String,
-  //   default: "/images/users/default.png",
-  // },
+  //profile pic of user
+  pImage: {
+    type: String,
+    default: "https://cdn-icons-png.flaticon.com/128/552/552721.png",
+  },
 });
 
 // remove confirmPassword before save

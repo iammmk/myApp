@@ -21,6 +21,9 @@ const commentSchema = new mongoose.Schema({
   uploadedBy:{
     type: String //username
   },
+  userImage:{
+    type: String
+  },
   comment: {
     type: String,
     required: true,
