@@ -91,11 +91,11 @@ let userSchema = new mongoose.Schema({
   //profile pic of user
   pImage: {
     type: String,
-    default: "https://cdn-icons-png.flaticon.com/128/552/552721.png",
+    default: "https://cdn-icons-png.flaticon.com/512/9131/9131529.png",
   },
   coverPhoto: {
     type: String,
-    default: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACoCAMAAABt9SM9AAAAY1BMVEUCAgIDAwMEBAQFBQUGBgYQEBBLS0sWFhaKiopPT08NDQ0lJSUeHh5bW1tISEihoaFkZGQbGxuenp6YmJiRkZFZWVkxMTEsLCxBQUE8PDwoKCinp6d+fn50dHRqamo+Pj5ubm6dwMvUAAADOklEQVR4nO3bXXPSQBSA4UQrWrUUi620auH//0pptu1sQiI5kD0f4X0nw7C5gJxnJjvhgup31m3WXbv1en23fnk97Oexvgz3J+vvW7vd7vl5fzyvVqubpvum66bFYrFcLjf7Y7PZbjePj9vHpoe3fu2Ppqenp2/tvmf9aPo80Ke+qtVBNwPdt7sebjHc8qDN5mXs1Ha7fR8+n//hbf5EkCu0538l6FXonX/f1+Gu2lWXXF3X3TMD51+7KtDHEX2YorpA7449ZGCBFQErNNMRKbDAco81him2FFhgOcbSZLKUAgssr1gzYBorBRZY/rDGMEWROs4EFljOsGbDJJMCCywfWMpMvqTAAssaayRTFKk0u0wKLLDssGbGdLoUWGBZYJkwKUh11MACyyfWLJnOlQILLC0sK6bSUmnY05nAAqs81nijcEyTSYEFVjGseTPV5z8ugAWWG6zJmZSlzmUCCyxTrLhME0uBBZYFVgmmwFJggaWLFZepnvaRHSywLLCiM1UltiqwwFLBKmSkxqQhBRZYxbDKMalJ5UwFpcACKxqWDlOts1WBBVY0LDWmuuhvZrDAiomlzFSpbVVggRUBS5PJTAossLxiGTJpS4EFlj8sZaZa/3kdrEvBqqvsbRQsA6UmYymwZoj1cgOa34NSLAMmD/s6WPPEyouBZUjjgikFliDPWHnWTk0+mdK1+ZKqwBLlFquzdJEro5zGF1MKLEEOsfKsedq5YkqX5FSqAkuUK6xO1jYHOTFKF9NZugssQX6wOkuPmTPVnh+sOoElyANWnrXHf/NA01n6zVCqBuucrDGOZesShikFliArrE7WDOOycgnGlAJLkAlWZxkmZab8Sw2nPjGwBClj9dqFSVOqCrqvvweWIDWsXrtgqbnEZkqBJUgBq9cuZAouc2BKgSWoKFavXeCKusyHKQWWoAJOrT8lpaX1lBM1vVX7Y22nmziwBE3qNN8bMDWlVfsDbecqEliCYBIEliCwBJ1vVF0CUwosQWAJOoepF27OgSUILEEwCQJLEFiCREbVxTKlwBIElqATmAyv1jiwBIEl6ChTL9yFBpYgsASxSQkCSxBYgmASBJYgsKhI/wBzkdQpTAeUIAAAAABJRU5ErkJggg==",
+    default: "https://img.freepik.com/premium-photo/background-gradient-black-overlay-abstract-background-black-night-dark-evening-with-space-text-background_661047-2507.jpg?w=360"
   },
 });
 

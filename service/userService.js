@@ -64,22 +64,31 @@ async function updateUserProfile(req, res) {
     let id = req.id;
     let user = await userModel.findById(id);
 
-    const result = await cloudinary.uploader.upload(req.body.pImage, {
+    console.log(user)
+    const profilePhoto = await cloudinary.uploader.upload(req.body.pImage, {
       folder: "users",
       // width: 300,
       // crop: "scale"
     });
+    const cp = await cloudinary.uploader.upload(req.body.coverPhoto, {
+      folder: "coverphoto",
+      // width: 300,
+      // crop: "scale"
+    });
+
     if (user) {
       let updateObj = req.body;
       for (let key in updateObj) {
         if (key === "pImage") {
-          user["pImage"] = result.secure_url;
+          user["pImage"] = profilePhoto.secure_url;
+        } else if (key === "coverPhoto") {
+          user["coverPhoto"] = cp.secure_url;
         } else {
           user[key] = updateObj[key];
         }
       }
       let updatedUser = await user.save();
-      
+
       // update profile pic in status
       let allStatus = await statusModel.find({ userId: id });
       for (let status of allStatus) {
@@ -95,10 +104,10 @@ async function updateUserProfile(req, res) {
       }
 
       // update profile pic in notification
-      let allNotifications= await notificationModel.find({fromId: id})
-      for (let notification of allNotifications){
-        notification["fromImage"]= updatedUser["pImage"]
-        await notification.save()
+      let allNotifications = await notificationModel.find({ fromId: id });
+      for (let notification of allNotifications) {
+        notification["fromImage"] = updatedUser["pImage"];
+        await notification.save();
       }
 
       res.status(200).json({
