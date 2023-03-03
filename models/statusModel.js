@@ -29,6 +29,9 @@ const statusSchema = new mongoose.Schema({
       message: "Max character limit is 140",
     },
   },
+  statusImage:{
+    type: String,
+  },
   childCommentIds: {
     type: [String],
     default: [],

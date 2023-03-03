@@ -3,19 +3,28 @@ const followModel = require("../models/followModel");
 const likeModel = require("../models/likeModel");
 const statusModel = require("../models/statusModel");
 const userModel = require("../models/userModel");
+const cloudinary = require("../utils/cloudinary");
 
 // CRUD
 async function createStatus(req, res) {
   try {
-    let { status } = req.body;
+    const statusPhoto =
+      req.body.statusImage &&
+      (await cloudinary.uploader.upload(req.body.statusImage, {
+        folder: "status",
+      }));
+
     let uid = req.id;
     let user = await userModel.findById(uid);
+
     const newStatus = {
       userId: uid,
       uploadedBy: user.username,
       userImage: user.pImage,
-      status: status,
+      status: req.body.status,
+      statusImage: req.body.statusImage ? statusPhoto.secure_url : null,
     };
+
     let addedStatus = await statusModel.create(newStatus);
     user.totalStatus = user.totalStatus + 1;
     await user.save();

@@ -64,7 +64,6 @@ async function updateUserProfile(req, res) {
     let id = req.id;
     let user = await userModel.findById(id);
 
-    console.log(user)
     const profilePhoto = await cloudinary.uploader.upload(req.body.pImage, {
       folder: "users",
       // width: 300,
