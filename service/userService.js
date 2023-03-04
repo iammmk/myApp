@@ -64,16 +64,20 @@ async function updateUserProfile(req, res) {
     let id = req.id;
     let user = await userModel.findById(id);
 
-    const profilePhoto = await cloudinary.uploader.upload(req.body.pImage, {
-      folder: "users",
-      // width: 300,
-      // crop: "scale"
-    });
-    const cp = await cloudinary.uploader.upload(req.body.coverPhoto, {
-      folder: "coverphoto",
-      // width: 300,
-      // crop: "scale"
-    });
+    const profilePhoto =
+      req.body.pImage &&
+      (await cloudinary.uploader.upload(req.body.pImage, {
+        folder: "users",
+        // width: 300,
+        // crop: "scale"
+      }));
+    const cp =
+      req.body.coverPhoto &&
+      (await cloudinary.uploader.upload(req.body.coverPhoto, {
+        folder: "coverphoto",
+        // width: 300,
+        // crop: "scale"
+      }));
 
     if (user) {
       let updateObj = req.body;
@@ -88,25 +92,27 @@ async function updateUserProfile(req, res) {
       }
       let updatedUser = await user.save();
 
-      // update profile pic in status
-      let allStatus = await statusModel.find({ userId: id });
-      for (let status of allStatus) {
-        status["userImage"] = updatedUser["pImage"];
-        await status.save();
-      }
+      if (req.body.pImage) {
+        // update profile pic in status
+        let allStatus = await statusModel.find({ userId: id });
+        for (let status of allStatus) {
+          status["userImage"] = updatedUser["pImage"];
+          await status.save();
+        }
 
-      // update profile pic in comment
-      let allComments = await commentModel.find({ userId: id });
-      for (let comment of allComments) {
-        comment["userImage"] = updatedUser["pImage"];
-        await comment.save();
-      }
+        // update profile pic in comment
+        let allComments = await commentModel.find({ userId: id });
+        for (let comment of allComments) {
+          comment["userImage"] = updatedUser["pImage"];
+          await comment.save();
+        }
 
-      // update profile pic in notification
-      let allNotifications = await notificationModel.find({ fromId: id });
-      for (let notification of allNotifications) {
-        notification["fromImage"] = updatedUser["pImage"];
-        await notification.save();
+        // update profile pic in notification
+        let allNotifications = await notificationModel.find({ fromId: id });
+        for (let notification of allNotifications) {
+          notification["fromImage"] = updatedUser["pImage"];
+          await notification.save();
+        }
       }
 
       res.status(200).json({
@@ -121,6 +127,59 @@ async function updateUserProfile(req, res) {
   } catch (error) {
     res.status(501).json({
       message: "Failed to update user",
+      error,
+    });
+  }
+}
+
+// reset cover / profile photo
+async function resetUserPhoto(req, res) {
+  try {
+    let id = req.id;
+    let user = await userModel.findById(id);
+
+    if (user) {
+      let updateObj = req.body;
+      for (let key in updateObj) {
+        user[key] = updateObj[key];
+      }
+      let updatedUser = await user.save();
+
+      if (updateObj.pImage) {
+        // reset profile pic in status
+        let allStatus = await statusModel.find({ userId: id });
+        for (let status of allStatus) {
+          status["userImage"] = updatedUser["pImage"];
+          await status.save();
+        }
+
+        // reset profile pic in comment
+        let allComments = await commentModel.find({ userId: id });
+        for (let comment of allComments) {
+          comment["userImage"] = updatedUser["pImage"];
+          await comment.save();
+        }
+
+        // update profile pic in notification
+        let allNotifications = await notificationModel.find({ fromId: id });
+        for (let notification of allNotifications) {
+          notification["fromImage"] = updatedUser["pImage"];
+          await notification.save();
+        }
+      }
+
+      res.status(200).json({
+        message: "User photo updated successfully !",
+        data: updatedUser,
+      });
+    } else {
+      res.status(404).json({
+        message: "User doesn't exist",
+      });
+    }
+  } catch (error) {
+    res.status(501).json({
+      message: "Failed to reset user photo",
       error,
     });
   }
@@ -155,4 +214,5 @@ async function updateUserProfile(req, res) {
 module.exports.getUserByUserId = getUserByUserId;
 module.exports.getUserProfile = getUserProfile;
 module.exports.updateUserProfile = updateUserProfile;
+module.exports.resetUserPhoto = resetUserPhoto;
 // module.exports.deleteUserProfile = deleteUserProfile;

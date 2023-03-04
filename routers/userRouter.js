@@ -7,6 +7,7 @@ const {
   getUserProfile,
   updateUserProfile,
   // deleteUserProfile,
+  resetUserPhoto
 } = require("../service/userService");
 
 const {
@@ -45,6 +46,8 @@ userRouter.route("/myProfile").get(getUserProfile).put(updateUserProfile);
 // .delete(deleteUserProfile);
 
 // userRouter.route("/userProfile/status/Following").get(getStatusByFollowing);
+
+userRouter.route("/myProfile/resetPhoto").put(resetUserPhoto);
 
 userRouter.route("/logout").get(logout);
 
