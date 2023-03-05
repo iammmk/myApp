@@ -181,10 +181,18 @@ async function getFollowersByUserId(req, res) {
 async function getFollowSuggestion(req, res) {
   try {
     let uId = req.id; //ownerId
+
+    const search = req.query.search || "";
+    const regex = new RegExp(search, "i"); // create a case-insensitive regular expression from the search string
+
     let SuggestionList = [];
     let allUsers = await userModel.find({});
     for (let item of allUsers) {
-      if (item._id != uId) {
+      if (
+        item._id != uId &&
+        // check if the username or name matches the search string
+        (regex.test(item.name) || regex.test(item.username))
+      ) {
         let isFollowing = await followModel.find({
           $and: [{ toId: item._id }, { fromId: uId }],
         });
