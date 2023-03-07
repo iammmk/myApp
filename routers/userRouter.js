@@ -7,7 +7,8 @@ const {
   getUserProfile,
   updateUserProfile,
   // deleteUserProfile,
-  resetUserPhoto
+  resetUserPhoto,
+  getAllUsers,
 } = require("../service/userService");
 
 const {
@@ -23,12 +24,13 @@ const { getStatusByUserId } = require("../service/statusService");
 const {
   getNotifications,
   editNotificationCount,
-  clearNotifications
+  clearNotifications,
 } = require("../service/notificationService");
 
 userRouter.use(protectRoute);
 
-userRouter.route("").get(getFollowSuggestion);
+userRouter.route("/").get(getAllUsers);
+userRouter.route("/suggestions").get(getFollowSuggestion);
 
 userRouter.route("/userProfile/:id").get(getUserByUserId);
 
@@ -40,7 +42,7 @@ userRouter
   .route("/notification")
   .get(getNotifications)
   .put(editNotificationCount)
-  .delete(clearNotifications)
+  .delete(clearNotifications);
 
 userRouter.route("/myProfile").get(getUserProfile).put(updateUserProfile);
 // .delete(deleteUserProfile);

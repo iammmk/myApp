@@ -4,12 +4,34 @@ const userModel = require("../models/userModel");
 const cloudinary = require("../utils/cloudinary");
 const notificationModel = require("../models/notificationModel");
 
+// get users by search
 async function getAllUsers(req, res) {
   try {
+    const search = req.query.search;
+
+    // Return empty array if search parameter is empty
+    if (!search.trim()) {
+      return res.status(200).json({
+        message: "Got all suggestions !",
+        data: [],
+      });
+    }
+
+    const regex = new RegExp(search, "i"); // create a case-insensitive regular expression from the search string
+    const result = [];
     let users = await userModel.find({});
+    for (let item of users) {
+      if (
+        // check if the username or name matches the search string
+        regex.test(item.name) ||
+        regex.test(item.username)
+      ) {
+        result.push(item);
+      }
+    }
     res.status(200).json({
-      message: "Got all users !",
-      data: users,
+      message: "Got all suggestions !",
+      data: result,
     });
   } catch (error) {
     res.status(501).json({
@@ -210,7 +232,7 @@ async function resetUserPhoto(req, res) {
 //   }
 // }
 
-// module.exports.getAllUsers = getAllUsers;
+module.exports.getAllUsers = getAllUsers;
 module.exports.getUserByUserId = getUserByUserId;
 module.exports.getUserProfile = getUserProfile;
 module.exports.updateUserProfile = updateUserProfile;
