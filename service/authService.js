@@ -38,8 +38,8 @@ async function login(req, res) {
       const token = jwt.sign({ id: user._id }, SECRET_KEY);
       res.cookie("jwt", token, {
         httpOnly: true,
-        sameSite: "none",
-        secure: true,
+        // sameSite: "none", //uncomment this during deployment
+        // secure: true, //uncomment this during deployment
       });
       res.status(200).json({
         message: "Login successful!",
