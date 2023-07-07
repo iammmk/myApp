@@ -51,22 +51,22 @@ server.listen(PORT, function () {
 });
 
 // creating socket server
-const io = require("socket.io")(server, {
-  cors: {
-    // origin: "https://myappmmk.netlify.app",
-    origin: "http://localhost:8080",
-  },
-});
+// const io = require("socket.io")(server, {
+//   cors: {
+//     // origin: "https://myappmmk.netlify.app",
+//     origin: "http://localhost:8080",
+//   },
+// });
 
-io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
+// io.on("connection", (socket) => {
+//   console.log("User connected:", socket.id);
 
-  // Add event listeners for socket events here
-  socket.on("upload-status", (status) => {
-    io.emit("receive-status", status);
-  });
+//   // Add event listeners for socket events here
+//   socket.on("upload-status", (status) => {
+//     io.emit("receive-status", status);
+//   });
 
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
-});
+//   socket.on("disconnect", () => {
+//     console.log("User disconnected:", socket.id);
+//   });
+// });

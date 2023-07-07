@@ -21,7 +21,7 @@ async function createChat(req, res) {
     const createdChat = await chatModel.create(newChat);
 
     res.status(200).json({
-      message: "new chat created !!",
+      message: "new chat sent !!",
       data: createdChat,
     });
   } catch (error) {
